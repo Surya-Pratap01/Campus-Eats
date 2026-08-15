@@ -51,10 +51,13 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(url)
     }
 
+    // TypeScript type guard: user is definitely not null here
+    const userId = user.id
+
     const { data: profile } = await supabase
       .from('profiles')
       .select('is_admin')
-      .eq('id', user.id)
+      .eq('id', userId)
       .single()
 
     if (!profile?.is_admin) {
