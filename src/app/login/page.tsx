@@ -9,7 +9,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
-  const supabase = createClient()
   const router = useRouter()
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -27,22 +26,28 @@ export default function LoginPage() {
 
     const redirectUrl = `${window.location.origin}/auth/callback`
     
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: redirectUrl,
-      },
-    })
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: redirectUrl,
+        },
+      })
 
-    if (error) {
-      console.error('Auth error:', error)
-      if (error.message.includes('Invalid redirect URL') || error.message.includes('redirect')) {
-        setError(`Authentication error: The redirect URL (${redirectUrl}) is not configured in Supabase Dashboard. Please add this URL to your Supabase project's Authentication > URL Configuration > Redirect URLs.`)
+      if (error) {
+        console.error('Auth error:', error)
+        if (error.message.includes('Invalid redirect URL') || error.message.includes('redirect')) {
+          setError(`Authentication error: The redirect URL (${redirectUrl}) is not configured in Supabase Dashboard. Please add this URL to your Supabase project's Authentication > URL Configuration > Redirect URLs.`)
+        } else {
+          setError(error.message)
+        }
       } else {
-        setError(error.message)
+        setMessage(`Magic link sent to ${email}! Check your Bennett email inbox (and spam folder).`)
       }
-    } else {
-      setMessage(`Magic link sent to ${email}! Check your Bennett email inbox (and spam folder).`)
+    } catch (err: any) {
+      console.error('Supabase client error:', err)
+      setError(err.message || 'Failed to initialize authentication. Please contact support.')
     }
 
     setLoading(false)
