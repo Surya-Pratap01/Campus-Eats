@@ -45,6 +45,12 @@ export async function updateSession(request: NextRequest) {
 
   // Admin-only routes
   if (request.nextUrl.pathname.startsWith('/admin')) {
+    if (!user) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/login'
+      return NextResponse.redirect(url)
+    }
+
     const { data: profile } = await supabase
       .from('profiles')
       .select('is_admin')

@@ -1,11 +1,11 @@
-'use client'
-
-import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
-export default function AuthCodeErrorPage() {
-  const searchParams = useSearchParams()
-  const error = searchParams.get('error') || 'Unknown error occurred'
+export default function AuthCodeErrorPage({
+  searchParams,
+}: {
+  searchParams: { error?: string }
+}) {
+  const error = searchParams.error || 'Unknown error occurred'
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-yellow-50 px-4">
