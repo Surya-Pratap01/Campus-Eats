@@ -29,40 +29,45 @@ async function getMenuItems(outletId: string) {
   return menuItems || []
 }
 
-export default async function OutletMenuPage({ params }: { params: { id: string } }) {
-  const outlet = await getOutlet(params.id)
+export default async function OutletMenuPage({
+  params,
+}: {
+  params: Promise<{ id: string }> | { id: string }
+}) {
+  const { id } = await Promise.resolve(params)
+  const outlet = await getOutlet(id)
   
   if (!outlet) {
     notFound()
   }
 
-  const menuItems = await getMenuItems(params.id)
+  const menuItems = await getMenuItems(id)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-50">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50/40 to-yellow-50">
       <Navbar />
       
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-6">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8">
+        <div className="mb-4 sm:mb-6">
           <Link
             href="/admin"
-            className="text-orange-600 hover:text-orange-700 font-medium transition"
+            className="inline-flex items-center min-h-[44px] px-3.5 py-2 rounded-xl bg-white shadow-2xs border border-gray-200 text-orange-600 hover:text-orange-700 font-semibold text-sm transition active:scale-95"
           >
             ← Back to Admin
           </Link>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">{outlet.name}</h1>
-          <p className="text-gray-500">Manage Menu Items</p>
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200/80 p-5 sm:p-8 mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-1 leading-tight">{outlet.name}</h1>
+          <p className="text-gray-500 text-xs sm:text-sm">Manage Menu Items & Prices</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
-          <div className="flex items-center justify-between mb-6">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200/80 p-5 sm:p-6 mb-6 sm:mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
             <h2 className="text-xl font-bold text-gray-900">Menu Items ({menuItems.length})</h2>
             <Link
-              href={`/admin/outlets/${params.id}/menu/new`}
-              className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded-lg transition"
+              href={`/admin/outlets/${id}/menu/new`}
+              className="min-h-[44px] px-4 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl transition shadow-xs text-sm flex items-center justify-center active:scale-95"
             >
               + Add Menu Item
             </Link>

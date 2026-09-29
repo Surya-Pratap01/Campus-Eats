@@ -1,67 +1,92 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import RatingForm from './RatingForm'
+import RatingModal, { MenuItemForRating } from './RatingModal'
+
+export interface Outlet {
+  id: string
+  name: string
+  description?: string | null
+  location?: string | null
+  photo_url?: string | null
+  menu_items?: MenuItemWithRatings[]
+}
+
+export interface RatingDimension {
+  taste: number
+  hygiene: number
+  quantity: number
+  value_for_money: number
+}
+
+export interface MenuItemWithRatings {
+  id: string
+  outlet_id: string
+  name: string
+  category?: string
+  price?: number
+  ratings?: RatingDimension[]
+}
 
 interface OutletCardProps {
-  outlet: any
+  outlet: Outlet
   avgRating: string | null
 }
 
 export default function OutletCard({ outlet, avgRating: outletAvgRating }: OutletCardProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [selectedItem, setSelectedItem] = useState<any>(null)
-  const [menuItems, setMenuItems] = useState<any[]>([])
-  const [filteredMenuItems, setFilteredMenuItems] = useState<any[]>([])
+  const [menuItems, setMenuItems] = useState<MenuItemWithRatings[]>(outlet.menu_items || [])
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
-  const [categories, setCategories] = useState<string[]>(['All'])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [itemRatings, setItemRatings] = useState<any[]>([])
-  const [ratingFilter, setRatingFilter] = useState('All')
+  const [ratingModalItem, setRatingModalItem] = useState<MenuItemForRating | null>(null)
+  const [isRatingModalOpen, setIsRatingModalOpen] = useState(false)
   const supabase = createClient()
 
-  useEffect(() => {
+  const categories = useMemo(() => {
     if (menuItems.length > 0) {
-      const uniqueCategories = ['All', ...Array.from(new Set(menuItems.map(item => item.category || 'Other')))]
-      setCategories(uniqueCategories)
+      return [
+        'All',
+        ...Array.from(new Set(menuItems.map((item) => item.category || 'Other'))),
+      ]
     }
+    return ['All']
   }, [menuItems])
 
-  useEffect(() => {
+  const filteredMenuItems = useMemo(() => {
     let filtered = menuItems
 
-    // Apply search filter
     if (searchQuery) {
-      filtered = filtered.filter(item => 
+      filtered = filtered.filter((item) =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase())
       )
     }
 
-    // Apply category filter
     if (selectedCategory !== 'All') {
-      filtered = filtered.filter(item => item.category === selectedCategory)
+      filtered = filtered.filter((item) => item.category === selectedCategory)
     }
 
-    setFilteredMenuItems(filtered)
+    return filtered
   }, [searchQuery, selectedCategory, menuItems])
 
-  const toggleMenu = async () => {
-    if (isMenuOpen) {
-      setIsMenuOpen(false)
-      setSelectedItem(null)
-      return
-    }
-
+  const fetchMenuItems = async () => {
     setLoading(true)
     setError('')
 
     try {
       const { data: items, error: fetchError } = await supabase
         .from('menu_items')
-        .select('*')
+        .select(`
+          *,
+          ratings (
+            taste,
+            hygiene,
+            quantity,
+            value_for_money
+          )
+        `)
         .eq('outlet_id', outlet.id)
         .order('name')
 
@@ -69,67 +94,33 @@ export default function OutletCard({ outlet, avgRating: outletAvgRating }: Outle
         setError('Failed to load menu items')
       } else {
         setMenuItems(items || [])
-        setFilteredMenuItems(items || [])
-        setIsMenuOpen(true)
       }
-    } catch (err) {
+    } catch {
       setError('Failed to load menu items')
     } finally {
       setLoading(false)
     }
   }
 
-  const selectItem = async (item: any) => {
-    setSelectedItem(item)
-    
-    // Fetch all ratings for this item
-    try {
-      const { data: ratings } = await supabase
-        .from('ratings')
-        .select(`
-          *,
-          profiles (email, full_name)
-        `)
-        .eq('menu_item_id', item.id)
-        .order('created_at', { ascending: false })
+  const toggleMenu = async () => {
+    if (isMenuOpen) {
+      setIsMenuOpen(false)
+      return
+    }
 
-      setItemRatings(ratings || [])
-
-      // Fetch existing rating for current user
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
-        const { data: userRating } = await supabase
-          .from('ratings')
-          .select('*')
-          .eq('menu_item_id', item.id)
-          .eq('student_id', user.id)
-          .single()
-        setSelectedItem({ ...item, existingRating: userRating })
-      }
-      
-      // Smooth scroll to review section after a short delay
-      setTimeout(() => {
-        const reviewSection = document.getElementById(`review-section-${item.id}`)
-        if (reviewSection) {
-          reviewSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        }
-      }, 100)
-    } catch (err) {
-      // No ratings or error fetching
-      setItemRatings([])
+    setIsMenuOpen(true)
+    if (menuItems.length === 0) {
+      await fetchMenuItems()
     }
   }
 
-  const handleRatingSubmitted = () => {
-    // Refresh ratings after submission
-    if (selectedItem) {
-      selectItem(selectedItem)
-    }
+  const handleOpenRateModal = (item: MenuItemWithRatings) => {
+    setRatingModalItem(item)
+    setIsRatingModalOpen(true)
   }
 
-  const closeItemDetails = () => {
-    setSelectedItem(null)
-    setItemRatings([])
+  const handleRatingSubmitted = async () => {
+    await fetchMenuItems()
   }
 
   const getCategoryEmoji = (category: string) => {
@@ -146,7 +137,7 @@ export default function OutletCard({ outlet, avgRating: outletAvgRating }: Outle
     return categoryMap[category] || '🍽️'
   }
 
-  const calculateAverageRating = (ratings: any[]) => {
+  const calculateAverageRating = (ratings: RatingDimension[]) => {
     if (!ratings || ratings.length === 0) return null
 
     const total = ratings.reduce((sum, rating) => {
@@ -157,306 +148,223 @@ export default function OutletCard({ outlet, avgRating: outletAvgRating }: Outle
     return (total / ratings.length).toFixed(1)
   }
 
-  const calculateDimensionAverage = (ratings: any[], dimension: string) => {
-    if (!ratings || ratings.length === 0) return null
-
-    const total = ratings.reduce((sum, rating) => sum + rating[dimension], 0)
-    return (total / ratings.length).toFixed(1)
-  }
-
-  const filteredRatings = ratingFilter === 'All' 
-    ? itemRatings 
-    : itemRatings.filter(rating => {
-        const avg = (rating.taste + rating.hygiene + rating.quantity + rating.value_for_money) / 4
-        return Math.round(avg) === parseInt(ratingFilter)
-      })
-
   // Group menu items by category
-  const groupedItems = filteredMenuItems.reduce((acc: Record<string, typeof filteredMenuItems>, item) => {
-    const category = item.category || 'Other'
-    if (!acc[category]) {
-      acc[category] = []
-    }
-    acc[category].push(item)
-    return acc
-  }, {})
+  const groupedItems = filteredMenuItems.reduce(
+    (acc: Record<string, typeof filteredMenuItems>, item) => {
+      const category = item.category || 'Other'
+      if (!acc[category]) {
+        acc[category] = []
+      }
+      acc[category].push(item)
+      return acc
+    },
+    {}
+  )
 
-  const avgRating = calculateAverageRating(itemRatings)
+  const itemsCount = menuItems.length > 0 ? menuItems.length : (outlet.menu_items?.length || 0)
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      {outlet.photo_url ? (
-        <div className="h-48 overflow-hidden">
-          <img
-            src={outlet.photo_url}
-            alt={outlet.name}
-            className="w-full h-full object-cover"
-          />
-        </div>
-      ) : (
-        <div className="h-48 bg-gradient-to-br from-orange-400 to-yellow-400 flex items-center justify-center">
-          <span className="text-6xl">🍽️</span>
-        </div>
-      )}
-      
-      <div className="p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-2">
-          {outlet.name}
-        </h2>
-        
-        {outlet.description && (
-          <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-            {outlet.description}
-          </p>
-        )}
-        
-        {outlet.location && (
-          <p className="text-gray-500 text-sm mb-3">
-            📍 {outlet.location}
-          </p>
-        )}
-        
-        <div className="flex items-center justify-between mt-4">
-          <div className="flex items-center space-x-1">
-            {outletAvgRating ? (
-              <>
-                <span className="text-yellow-500 text-lg">⭐</span>
-                <span className="font-semibold text-gray-900">{outletAvgRating}</span>
-              </>
-            ) : (
-              <span className="text-gray-400 text-sm">No ratings yet</span>
-            )}
-          </div>
-          
-          <button
-            onClick={toggleMenu}
-            className="text-orange-600 font-medium text-sm hover:text-orange-700 transition"
-          >
-            {isMenuOpen ? 'Hide Menu ↑' : loading ? 'Loading...' : 'View Menu →'}
-          </button>
-        </div>
-
-        {error && (
-          <p className="text-red-500 text-sm mt-3">{error}</p>
-        )}
-
-        {isMenuOpen && !loading && (
-          <div className="mt-4 pt-4 border-t border-gray-200">
-            <h3 className="text-lg font-bold text-gray-900 mb-3">MENU</h3>
-            
-            {/* Search and Filters */}
-            <div className="mb-4 space-y-3">
-              <input
-                type="text"
-                placeholder="🔍 Search food..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
+    <>
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-200/80 overflow-hidden hover:shadow-md transition-all duration-200 flex flex-col justify-between">
+        <div>
+          {outlet.photo_url ? (
+            <div className="h-44 sm:h-48 overflow-hidden relative">
+              <img
+                src={outlet.photo_url}
+                alt={outlet.name}
+                className="w-full h-full object-cover"
               />
-              
-              <div className="flex flex-wrap gap-2">
-                {categories.map(category => (
-                  <button
-                    key={category}
-                    onClick={() => setSelectedCategory(category)}
-                    className={`px-3 py-1 rounded-full text-sm transition ${
-                      selectedCategory === category
-                        ? 'bg-orange-600 text-white'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
-                  >
-                    {category}
-                  </button>
-                ))}
+              <div className="absolute top-3 right-3">
+                <span className="bg-black/70 backdrop-blur-xs text-white text-xs font-semibold px-2.5 py-1 rounded-full">
+                  {itemsCount > 0 ? `${itemsCount} items` : 'Menu coming soon'}
+                </span>
               </div>
             </div>
-            
-            {filteredMenuItems.length === 0 ? (
-              <p className="text-gray-500 text-sm">No menu items found</p>
-            ) : (
-              <div className="space-y-4">
-                {Object.entries(groupedItems).map(([category, items]) => (
-                  <div key={category}>
-                    <h4 className="text-md font-semibold text-gray-800 mb-2 flex items-center">
-                      <span className="mr-2">{getCategoryEmoji(category)}</span>
-                      {category}
-                    </h4>
-                    <div className="space-y-2">
-                      {items.map((item) => {
-                        const itemAvgRating = calculateAverageRating(
-                          itemRatings.filter(r => r.menu_item_id === item.id)
-                        )
-                        return (
-                          <button
-                            key={item.id}
-                            onClick={() => selectItem(item)}
-                            className="w-full text-left text-gray-700 hover:text-orange-600 transition block"
-                          >
-                            <div className="flex justify-between items-center text-sm">
-                              <span>• {item.name}</span>
-                              <div className="flex items-center gap-2">
-                                {itemAvgRating && (
-                                  <span className="text-yellow-500">⭐ {itemAvgRating}</span>
-                                )}
-                                {item.price && (
-                                  <span className="font-medium">₹{item.price}</span>
-                                )}
-                              </div>
-                            </div>
-                          </button>
-                        )
-                      })}
-                    </div>
-                  </div>
-                ))}
+          ) : (
+            <div className="h-44 sm:h-48 bg-gradient-to-br from-orange-400 to-yellow-400 flex items-center justify-center relative">
+              <span className="text-6xl">🍽️</span>
+              <div className="absolute top-3 right-3">
+                <span className="bg-black/40 backdrop-blur-xs text-white text-xs font-semibold px-2.5 py-1 rounded-full">
+                  {itemsCount > 0 ? `${itemsCount} items` : 'Menu coming soon'}
+                </span>
               </div>
+            </div>
+          )}
+
+          <div className="p-5 sm:p-6">
+            <div className="flex items-start justify-between gap-2 mb-2">
+              <h2 className="text-xl font-bold text-gray-900 leading-snug">{outlet.name}</h2>
+              <div className="flex items-center space-x-1 shrink-0 bg-yellow-50 px-2 py-0.5 rounded-lg border border-yellow-200/60">
+                {outletAvgRating ? (
+                  <>
+                    <span className="text-yellow-600 text-sm">⭐</span>
+                    <span className="font-bold text-gray-900 text-sm">{outletAvgRating}</span>
+                  </>
+                ) : (
+                  <span className="text-gray-400 text-xs">Unrated</span>
+                )}
+              </div>
+            </div>
+
+            {outlet.description && (
+              <p className="text-gray-600 text-sm mb-3 line-clamp-2 leading-relaxed">
+                {outlet.description}
+              </p>
             )}
-          </div>
-        )}
 
-        {selectedItem && (
-          <div className="mt-4 pt-4 border-t border-gray-200">
-            {/* Sticky Item Header */}
-            <div className="sticky top-0 bg-white border-b border-gray-200 py-3 mb-4 z-10">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900">{selectedItem.name}</h3>
-                  <p className="text-sm text-gray-600">{selectedItem.category}</p>
-                </div>
-                <div className="text-right">
-                  {selectedItem.price && (
-                    <p className="text-orange-600 font-bold text-lg">₹{selectedItem.price}</p>
-                  )}
-                  <button
-                    onClick={closeItemDetails}
-                    className="text-gray-500 hover:text-gray-700 text-sm mt-1"
-                  >
-                    ✕ Close
-                  </button>
-                </div>
-              </div>
+            {outlet.location && (
+              <p className="text-gray-500 text-xs sm:text-sm mb-4 flex items-center">
+                <span className="mr-1">📍</span>
+                <span>{outlet.location}</span>
+              </p>
+            )}
+
+            {/* View Menu Primary Action Button (≥44px Touch Target) */}
+            <div className="pt-2 border-t border-gray-100 flex items-center justify-between gap-3">
+              <span className="text-xs text-gray-500">
+                {itemsCount > 0 ? `${itemsCount} dishes available` : 'Menu coming soon'}
+              </span>
+
+              <button
+                type="button"
+                onClick={toggleMenu}
+                className="min-h-[44px] px-4 py-2 bg-orange-50 hover:bg-orange-100 text-orange-600 active:bg-orange-200 font-bold text-sm rounded-xl transition-all active:scale-95 flex items-center justify-center gap-1.5"
+                aria-expanded={isMenuOpen}
+              >
+                <span>{isMenuOpen ? 'Hide Menu' : loading ? 'Loading...' : 'View Menu'}</span>
+                <span>{isMenuOpen ? '↑' : '→'}</span>
+              </button>
             </div>
 
-            {/* Rating Summary */}
-            <div className="bg-orange-50 rounded-lg p-4 mb-4">
-              {avgRating && (
-                <div className="flex items-center space-x-2 mb-3">
-                  <span className="text-yellow-500 text-xl">⭐</span>
-                  <span className="text-xl font-bold text-gray-900">{avgRating}</span>
-                  <span className="text-gray-500">({itemRatings.length} review{itemRatings.length !== 1 ? 's' : ''})</span>
-                </div>
-              )}
+            {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
 
-              {itemRatings.length > 0 && (
-                <div className="pt-3 border-t border-orange-200">
-                  <h5 className="font-semibold text-gray-900 mb-2">Rating Breakdown</h5>
-                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div>
-                      <span className="text-gray-600">Taste:</span>
-                      <span className="ml-1 font-medium">{calculateDimensionAverage(itemRatings, 'taste') || '-'}</span>
-                    </div>
-                    <div>
-                      <span className="text-gray-600">Hygiene:</span>
-                      <span className="ml-1 font-medium">{calculateDimensionAverage(itemRatings, 'hygiene') || '-'}</span>
-                    </div>
-                    <div>
-                      <span className="text-gray-600">Quantity:</span>
-                      <span className="ml-1 font-medium">{calculateDimensionAverage(itemRatings, 'quantity') || '-'}</span>
-                    </div>
-                    <div>
-                      <span className="text-gray-600">Value:</span>
-                      <span className="ml-1 font-medium">{calculateDimensionAverage(itemRatings, 'value_for_money') || '-'}</span>
-                    </div>
+            {/* Collapsible Menu Section */}
+            {isMenuOpen && !loading && (
+              <div className="mt-4 pt-4 border-t border-gray-200 animate-in fade-in duration-200">
+                <h3 className="text-sm font-bold text-gray-900 tracking-wider uppercase mb-3 flex items-center justify-between">
+                  <span>Menu</span>
+                  <span className="text-xs font-normal text-gray-500 lowercase">
+                    {filteredMenuItems.length} item{filteredMenuItems.length !== 1 ? 's' : ''}
+                  </span>
+                </h3>
+
+                {itemsCount === 0 ? (
+                  <div className="py-6 px-4 text-center bg-gray-50 rounded-xl border border-gray-100">
+                    <span className="text-2xl block mb-1">📋</span>
+                    <p className="text-gray-700 font-semibold text-sm">Menu information coming soon</p>
+                    <p className="text-gray-500 text-xs mt-1">
+                      Official menu items will appear once updated.
+                    </p>
                   </div>
-                </div>
-              )}
-            </div>
+                ) : (
+                  <>
+                    {/* In-Card Search and Category Filters */}
+                    <div className="mb-4 space-y-2.5">
+                      <input
+                        type="text"
+                        placeholder="Search food in menu..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition text-base"
+                      />
 
-            {/* Reviews Section */}
-            <div id={`review-section-${selectedItem.id}`} className="bg-white rounded-lg p-4 border border-gray-200 mb-4">
-              <div className="flex justify-between items-center mb-3">
-                <h4 className="font-bold text-gray-900">Reviews ({filteredRatings.length})</h4>
-                <select
-                  value={ratingFilter}
-                  onChange={(e) => setRatingFilter(e.target.value)}
-                  className="text-sm border border-gray-300 rounded px-2 py-1"
-                >
-                  <option value="All">All</option>
-                  <option value="5">5★</option>
-                  <option value="4">4★</option>
-                  <option value="3">3★</option>
-                  <option value="2">2★</option>
-                  <option value="1">1★</option>
-                </select>
-              </div>
-              
-              {filteredRatings.length === 0 ? (
-                <p className="text-gray-500 text-sm">No reviews yet. Be the first to rate this item!</p>
-              ) : (
-                <div className="space-y-3 max-h-64 overflow-y-auto">
-                  {filteredRatings.map((rating) => (
-                    <div key={rating.id} className="border-b border-gray-200 pb-3 last:border-0">
-                      <div className="flex items-start justify-between mb-2">
-                        <div>
-                          <a 
-                            href={`mailto:${rating.profiles?.email}`}
-                            className="font-semibold text-gray-900 hover:text-orange-600"
-                          >
-                            {rating.profiles?.email || 'Anonymous'}
-                          </a>
-                          <p className="text-xs text-gray-500">
-                            {new Date(rating.created_at).toLocaleDateString()}
-                          </p>
+                      {categories.length > 1 && (
+                        <div className="flex flex-wrap gap-1.5">
+                          {categories.map((category) => (
+                            <button
+                              key={category}
+                              type="button"
+                              onClick={() => setSelectedCategory(category)}
+                              className={`min-h-[38px] px-3 py-1 rounded-full text-xs font-medium transition active:scale-95 ${
+                                selectedCategory === category
+                                  ? 'bg-orange-600 text-white font-semibold'
+                                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                              }`}
+                            >
+                              {category}
+                            </button>
+                          ))}
                         </div>
-                        <div className="text-right">
-                          <p className="font-bold text-orange-600">
-                            {((rating.taste + rating.hygiene + rating.quantity + rating.value_for_money) / 4).toFixed(1)}
-                          </p>
-                        </div>
-                      </div>
-                      
-                      <div className="grid grid-cols-4 gap-2 text-xs mb-2">
-                        <div>
-                          <span className="text-gray-500">Taste:</span>
-                          <span className="ml-1">{rating.taste}/5</span>
-                        </div>
-                        <div>
-                          <span className="text-gray-500">Hygiene:</span>
-                          <span className="ml-1">{rating.hygiene}/5</span>
-                        </div>
-                        <div>
-                          <span className="text-gray-500">Quantity:</span>
-                          <span className="ml-1">{rating.quantity}/5</span>
-                        </div>
-                        <div>
-                          <span className="text-gray-500">Value:</span>
-                          <span className="ml-1">{rating.value_for_money}/5</span>
-                        </div>
-                      </div>
-                      
-                      {rating.comment && (
-                        <p className="text-gray-700 text-sm">{rating.comment}</p>
                       )}
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
 
-            {/* Rating Form */}
-            <div className="bg-white rounded-lg p-4 border border-gray-200">
-              <h4 className="font-bold text-gray-900 mb-3">
-                {selectedItem.existingRating ? 'Edit My Review' : 'Rate this item'}
-              </h4>
-              <RatingForm 
-                menuItemId={selectedItem.id} 
-                existingRating={selectedItem.existingRating}
-                onRatingSubmitted={handleRatingSubmitted}
-              />
-            </div>
+                    {filteredMenuItems.length === 0 ? (
+                      <p className="text-gray-500 text-sm text-center py-6 bg-gray-50 rounded-xl">
+                        No matching menu items
+                      </p>
+                    ) : (
+                      <div className="space-y-4 max-h-96 overflow-y-auto pr-1">
+                        {Object.entries(groupedItems).map(([category, items]) => (
+                          <div key={category}>
+                            <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wide mb-2 flex items-center">
+                              <span className="mr-1.5">{getCategoryEmoji(category)}</span>
+                              {category} ({items.length})
+                            </h4>
+                            <div className="space-y-2">
+                              {items.map((item) => {
+                                const itemAvgRating = calculateAverageRating(item.ratings || [])
+                                return (
+                                  <div
+                                    key={item.id}
+                                    className="flex items-center justify-between p-3 rounded-xl bg-gray-50 hover:bg-orange-50/50 border border-gray-100 transition"
+                                  >
+                                    <div className="min-w-0 pr-2">
+                                      <p className="text-sm font-semibold text-gray-900 truncate">
+                                        {item.name}
+                                      </p>
+                                      <div className="flex items-center gap-2.5 mt-1 text-xs text-gray-500">
+                                        {item.price && (
+                                          <span className="font-bold text-orange-600 text-sm">
+                                            ₹{item.price}
+                                          </span>
+                                        )}
+                                        {itemAvgRating ? (
+                                          <span className="text-yellow-600 font-semibold flex items-center gap-0.5">
+                                            <span>★</span> {itemAvgRating}{' '}
+                                            <span className="text-gray-400 font-normal">
+                                              ({item.ratings?.length || 0})
+                                            </span>
+                                          </span>
+                                        ) : (
+                                          <span className="text-gray-400">No ratings yet</span>
+                                        )}
+                                      </div>
+                                    </div>
+
+                                    {/* Mobile-Friendly Rate Button (≥44px Touch Target) */}
+                                    <button
+                                      type="button"
+                                      onClick={() => handleOpenRateModal(item)}
+                                      className="flex-shrink-0 min-h-[44px] min-w-[64px] bg-white hover:bg-orange-600 text-orange-600 hover:text-white border border-orange-200 hover:border-orange-600 px-3.5 py-2 rounded-xl text-xs font-bold transition shadow-xs active:scale-95 flex items-center justify-center"
+                                    >
+                                      Rate
+                                    </button>
+                                  </div>
+                                )
+                              })}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
-    </div>
+
+      {/* In-Place Rating Modal (Zero Scroll Jump) */}
+      <RatingModal
+        isOpen={isRatingModalOpen}
+        onClose={() => {
+          setIsRatingModalOpen(false)
+          setRatingModalItem(null)
+        }}
+        item={ratingModalItem}
+        onRatingSubmitted={handleRatingSubmitted}
+      />
+    </>
   )
 }

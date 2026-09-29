@@ -43,10 +43,10 @@ export default function ReportButton({ ratingId, isReported, onReportChange }: R
       <button
         onClick={handleReport}
         disabled={loading || isReported}
-        className={`text-sm font-medium transition ${
+        className={`min-h-[44px] px-2.5 py-1.5 text-xs font-semibold rounded-lg transition flex items-center active:scale-95 ${
           isReported 
-            ? 'text-gray-400 cursor-not-allowed' 
-            : 'text-red-500 hover:text-red-600'
+            ? 'text-gray-400 cursor-not-allowed bg-gray-50' 
+            : 'text-red-500 hover:text-red-700 hover:bg-red-50'
         }`}
       >
         {loading ? 'Reporting...' : isReported ? '✓ Reported' : '🚩 Report'}

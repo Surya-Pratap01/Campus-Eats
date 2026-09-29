@@ -3,9 +3,18 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
+interface ExistingRating {
+  id?: string
+  taste?: number
+  hygiene?: number
+  quantity?: number
+  value_for_money?: number
+  comment?: string | null
+}
+
 interface RatingFormProps {
   menuItemId: string
-  existingRating?: any
+  existingRating?: ExistingRating | null
   onRatingSubmitted?: () => void
 }
 
@@ -95,48 +104,17 @@ export default function RatingForm({ menuItemId, existingRating, onRatingSubmitt
     setLoading(false)
   }
 
-  const StarInput = ({ value, onChange, label }: { value: number, onChange: (val: number) => void, label: string }) => {
-    const [hoverValue, setHoverValue] = useState(0)
-    
-    return (
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
-        <div className="flex items-center gap-1">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <button
-              key={star}
-              type="button"
-              onClick={() => onChange(star)}
-              onMouseEnter={() => setHoverValue(star)}
-              onMouseLeave={() => setHoverValue(0)}
-              onFocus={() => setHoverValue(star)}
-              onBlur={() => setHoverValue(0)}
-              aria-label={`Rate ${label} ${star} out of 5`}
-              className={`text-2xl transition-all duration-200 transform hover:scale-110 active:scale-95 min-w-[28px] focus:outline-none focus:ring-2 focus:ring-orange-500 rounded ${
-                star <= (hoverValue || value) 
-                  ? 'text-yellow-500 scale-105' 
-                  : 'text-gray-300 hover:text-yellow-400'
-              }`}
-            >
-              {star <= (hoverValue || value) ? '★' : '☆'}
-            </button>
-          ))}
-        </div>
-      </div>
-    )
-  }
-
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <StarInput value={taste} onChange={setTaste} label="Taste" />
-        <StarInput value={hygiene} onChange={setHygiene} label="Hygiene" />
         <StarInput value={quantity} onChange={setQuantity} label="Quantity" />
         <StarInput value={valueForMoney} onChange={setValueForMoney} label="Value for Money" />
+        <StarInput value={hygiene} onChange={setHygiene} label="Hygiene" />
       </div>
 
       <div>
-        <label htmlFor="comment" className="block text-sm font-medium text-gray-700 mb-2">
+        <label htmlFor="comment" className="block text-sm font-semibold text-gray-700 mb-2">
           Comment (optional)
         </label>
         <textarea
@@ -146,22 +124,22 @@ export default function RatingForm({ menuItemId, existingRating, onRatingSubmitt
           placeholder="Share your experience..."
           rows={3}
           maxLength={300}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition resize-none"
+          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition text-base resize-none"
         />
         <p className="text-sm text-gray-500 mt-1">{comment.length}/300 characters</p>
       </div>
 
       {message && (
-        <div className={`p-3 rounded-lg ${message.includes('Error') ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`}>
+        <div className={`p-3.5 rounded-xl text-sm ${message.includes('Error') ? 'bg-red-50 border border-red-200 text-red-700' : 'bg-green-50 border border-green-200 text-green-700'}`}>
           {message}
         </div>
       )}
 
-      <div className="flex space-x-4">
+      <div className="flex flex-col sm:flex-row gap-3 pt-2">
         <button
           type="submit"
           disabled={loading}
-          className="flex-1 bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-4 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-1 min-h-[48px] bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 px-4 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed shadow-xs active:scale-98 flex items-center justify-center text-sm"
         >
           {loading ? 'Submitting...' : existingRating ? 'Update Rating' : 'Submit Rating'}
         </button>
@@ -171,12 +149,48 @@ export default function RatingForm({ menuItemId, existingRating, onRatingSubmitt
             type="button"
             onClick={handleDelete}
             disabled={loading}
-            className="bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-4 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="min-h-[48px] bg-red-50 hover:bg-red-100 text-red-600 font-semibold py-3.5 px-4 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed border border-red-200 active:scale-98 flex items-center justify-center text-sm"
           >
             Delete
           </button>
         )}
       </div>
     </form>
+  )
+}
+
+function StarInput({ value, onChange, label }: { value: number; onChange: (val: number) => void; label: string }) {
+  const [hoverValue, setHoverValue] = useState(0)
+  
+  return (
+    <div className="mb-2">
+      <div className="flex items-center justify-between mb-1">
+        <label className="block text-sm font-semibold text-gray-700">{label}</label>
+        <span className="text-xs font-bold text-orange-600 sm:hidden">
+          {(hoverValue || value) > 0 ? `${hoverValue || value} / 5` : 'Not rated'}
+        </span>
+      </div>
+      <div className="flex items-center gap-1">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <button
+            key={star}
+            type="button"
+            onClick={() => onChange(star)}
+            onMouseEnter={() => setHoverValue(star)}
+            onMouseLeave={() => setHoverValue(0)}
+            onFocus={() => setHoverValue(star)}
+            onBlur={() => setHoverValue(0)}
+            aria-label={`Rate ${label} ${star} out of 5`}
+            className={`w-11 h-11 flex items-center justify-center text-3xl sm:text-2xl rounded-xl transition-all duration-200 transform active:scale-90 focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+              star <= (hoverValue || value) 
+                ? 'text-yellow-500 bg-amber-50/50 sm:bg-transparent' 
+                : 'text-gray-300 hover:text-yellow-400'
+            }`}
+          >
+            {star <= (hoverValue || value) ? '★' : '☆'}
+          </button>
+        ))}
+      </div>
+    </div>
   )
 }

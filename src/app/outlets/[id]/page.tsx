@@ -37,7 +37,23 @@ async function getMenuItems(outletId: string) {
   return menuItems || []
 }
 
-function calculateAverageRating(ratings: any[]) {
+interface RatingDimension {
+  taste: number
+  hygiene: number
+  quantity: number
+  value_for_money: number
+}
+
+interface MenuItemWithRatings {
+  id: string
+  name: string
+  category?: string
+  price?: number
+  photo_url?: string | null
+  ratings?: RatingDimension[]
+}
+
+function calculateAverageRating(ratings: RatingDimension[]) {
   if (!ratings || ratings.length === 0) return null
 
   const total = ratings.reduce((sum, rating) => {
@@ -48,7 +64,8 @@ function calculateAverageRating(ratings: any[]) {
   return (total / ratings.length).toFixed(1)
 }
 
-function getCategoryEmoji(category: string) {
+function getCategoryEmoji(category?: string) {
+  if (!category) return '🍽️'
   const categoryMap: { [key: string]: string } = {
     'Beverages': '🥤',
     'Snacks': '🍿',
@@ -62,14 +79,19 @@ function getCategoryEmoji(category: string) {
   return categoryMap[category] || '🍽️'
 }
 
-export default async function OutletPage({ params }: { params: { id: string } }) {
-  const outlet = await getOutlet(params.id)
+export default async function OutletPage({
+  params,
+}: {
+  params: Promise<{ id: string }> | { id: string }
+}) {
+  const { id } = await Promise.resolve(params)
+  const outlet = await getOutlet(id)
   
   if (!outlet) {
     notFound()
   }
 
-  const menuItems = await getMenuItems(params.id)
+  const menuItems = await getMenuItems(id)
 
   // Group by category
   const groupedItems = menuItems.reduce((acc: Record<string, typeof menuItems>, item) => {
@@ -82,20 +104,20 @@ export default async function OutletPage({ params }: { params: { id: string } })
   }, {})
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-50">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50/40 to-yellow-50">
       <Navbar />
       
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8">
         <Link
           href="/"
-          className="inline-flex items-center text-orange-600 hover:text-orange-700 font-medium mb-6 transition"
+          className="inline-flex items-center min-h-[44px] px-3.5 py-2 rounded-xl bg-white shadow-2xs border border-gray-200 text-orange-600 hover:text-orange-700 font-semibold text-sm mb-4 sm:mb-6 transition active:scale-95"
         >
-          ← Back to Outlets
+          ← Back to All Outlets
         </Link>
 
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200/80 overflow-hidden mb-6 sm:mb-8">
           {outlet.photo_url ? (
-            <div className="h-64 overflow-hidden">
+            <div className="h-48 sm:h-64 overflow-hidden relative">
               <img
                 src={outlet.photo_url}
                 alt={outlet.name}
@@ -103,88 +125,104 @@ export default async function OutletPage({ params }: { params: { id: string } })
               />
             </div>
           ) : (
-            <div className="h-64 bg-gradient-to-br from-orange-400 to-yellow-400 flex items-center justify-center">
-              <span className="text-8xl">🍽️</span>
+            <div className="h-48 sm:h-64 bg-gradient-to-br from-orange-400 to-yellow-400 flex items-center justify-center">
+              <span className="text-7xl sm:text-8xl">🍽️</span>
             </div>
           )}
           
-          <div className="p-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">{outlet.name}</h1>
+          <div className="p-5 sm:p-8">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-2 leading-tight">
+              {outlet.name}
+            </h1>
             
             {outlet.description && (
-              <p className="text-gray-600 text-lg mb-4">{outlet.description}</p>
+              <p className="text-gray-600 text-sm sm:text-base mb-3 leading-relaxed">
+                {outlet.description}
+              </p>
             )}
             
             {outlet.location && (
-              <p className="text-gray-500">📍 {outlet.location}</p>
+              <p className="text-gray-500 text-xs sm:text-sm flex items-center">
+                <span className="mr-1">📍</span>
+                <span>{outlet.location}</span>
+              </p>
             )}
           </div>
         </div>
 
         {menuItems.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-2xl shadow-lg">
-            <div className="text-6xl mb-4">📋</div>
-            <h2 className="text-2xl font-semibold text-gray-700 mb-2">No menu items yet</h2>
-            <p className="text-gray-500">Check back soon or ask an admin to add menu items!</p>
+          <div className="text-center py-12 sm:py-16 bg-white rounded-2xl shadow-xs border border-gray-200 p-6">
+            <div className="text-5xl mb-3">📋</div>
+            <h2 className="text-xl font-bold text-gray-800 mb-1">Menu information coming soon</h2>
+            <p className="text-gray-500 text-sm max-w-md mx-auto">
+              We are working on bringing the verified, official menu for this outlet.
+            </p>
           </div>
         ) : (
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8">
             {Object.entries(groupedItems).map(([category, items]) => (
               <div key={category}>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4 flex items-center">
                   <span className="mr-2">{getCategoryEmoji(category)}</span>
-                  {category}
+                  <span>{category}</span>
+                  <span className="ml-2 text-xs font-semibold px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full">
+                    {items.length}
+                  </span>
                 </h2>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {items.map((item: any) => {
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-6">
+                  {items.map((item: MenuItemWithRatings) => {
                     const avgRating = calculateAverageRating(item.ratings || [])
                     
                     return (
                       <Link
                         key={item.id}
                         href={`/items/${item.id}`}
-                        className="group"
+                        className="group block active:scale-98 transition-transform"
                       >
-                        <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full">
-                          {item.photo_url ? (
-                            <div className="h-40 overflow-hidden">
-                              <img
-                                src={item.photo_url}
-                                alt={item.name}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                              />
-                            </div>
-                          ) : (
-                            <div className="h-40 bg-gradient-to-br from-orange-300 to-yellow-300 flex items-center justify-center">
-                              <span className="text-4xl">{getCategoryEmoji(item.category)}</span>
-                            </div>
-                          )}
-                          
-                          <div className="p-4">
-                            <h3 className="font-bold text-gray-900 mb-1">{item.name}</h3>
-                            
-                            {item.price && (
-                              <p className="text-orange-600 font-semibold mb-2">₹{item.price}</p>
+                        <div className="bg-white rounded-2xl shadow-xs border border-gray-200/80 overflow-hidden hover:shadow-md transition-shadow h-full flex flex-col justify-between">
+                          <div>
+                            {item.photo_url ? (
+                              <div className="h-36 sm:h-40 overflow-hidden">
+                                <img
+                                  src={item.photo_url}
+                                  alt={item.name}
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                />
+                              </div>
+                            ) : (
+                              <div className="h-28 sm:h-36 bg-gradient-to-br from-orange-200 via-amber-100 to-yellow-200 flex items-center justify-center">
+                                <span className="text-3xl sm:text-4xl">{getCategoryEmoji(item.category)}</span>
+                              </div>
                             )}
                             
-                            <div className="flex items-center justify-between mt-3">
-                              <div className="flex items-center space-x-1">
-                                {avgRating ? (
-                                  <>
-                                    <span className="text-yellow-500">⭐</span>
-                                    <span className="font-semibold text-gray-900">{avgRating}</span>
-                                    <span className="text-gray-400 text-sm">({item.ratings?.length || 0})</span>
-                                  </>
-                                ) : (
-                                  <span className="text-gray-400 text-sm">No ratings</span>
-                                )}
-                              </div>
+                            <div className="p-4">
+                              <h3 className="font-bold text-gray-900 text-base mb-1 group-hover:text-orange-600 transition">
+                                {item.name}
+                              </h3>
                               
-                              <span className="text-orange-600 font-medium text-sm group-hover:text-orange-700 transition">
-                                View →
-                              </span>
+                              {item.price && (
+                                <p className="text-orange-600 font-bold text-base mb-2">₹{item.price}</p>
+                              )}
                             </div>
+                          </div>
+
+                          <div className="px-4 pb-4 pt-2 border-t border-gray-100 flex items-center justify-between">
+                            <div className="flex items-center space-x-1">
+                              {avgRating ? (
+                                <>
+                                  <span className="text-yellow-500 text-sm">⭐</span>
+                                  <span className="font-bold text-gray-900 text-sm">{avgRating}</span>
+                                  <span className="text-gray-400 text-xs">({item.ratings?.length || 0})</span>
+                                </>
+                              ) : (
+                                <span className="text-gray-400 text-xs">No ratings yet</span>
+                              )}
+                            </div>
+                            
+                            <span className="min-h-[44px] px-3 flex items-center text-orange-600 font-bold text-xs group-hover:text-orange-700 transition">
+                              Details & Rate →
+                            </span>
                           </div>
                         </div>
                       </Link>

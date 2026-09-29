@@ -1,11 +1,12 @@
 import Link from 'next/link'
 
-export default function AuthCodeErrorPage({
+export default async function AuthCodeErrorPage({
   searchParams,
 }: {
-  searchParams: { error?: string }
+  searchParams: Promise<{ error?: string }> | { error?: string }
 }) {
-  const error = searchParams.error || 'Unknown error occurred'
+  const resolvedParams = await Promise.resolve(searchParams)
+  const error = resolvedParams?.error || 'Unknown error occurred'
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-yellow-50 px-4">
@@ -22,10 +23,9 @@ export default function AuthCodeErrorPage({
           <div className="text-left text-sm text-gray-600 mb-6">
             <p className="font-semibold mb-2">Troubleshooting tips:</p>
             <ul className="list-disc pl-5 space-y-1">
-              <li>Make sure you clicked the magic link from your Bennett email</li>
-              <li>Try logging in again with a fresh magic link</li>
-              <li>If testing from mobile, ensure your laptop's IP hasn't changed</li>
-              <li>Check that the redirect URL is configured in Supabase Dashboard</li>
+              <li>Check that the link has not expired</li>
+              <li>Ensure you are using the latest link sent to your Bennett email</li>
+              <li>Try logging in again with your email and password</li>
             </ul>
           </div>
           <Link

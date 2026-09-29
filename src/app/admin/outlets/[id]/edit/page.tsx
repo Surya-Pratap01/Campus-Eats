@@ -89,7 +89,7 @@ export default function EditOutletPage() {
     try {
       // Upload to Supabase Storage
       const fileName = `${params.id}-${Date.now()}.${file.name.split('.').pop()}`
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('outlet-images')
         .upload(fileName, file)
 
@@ -103,8 +103,9 @@ export default function EditOutletPage() {
         .getPublicUrl(fileName)
 
       setPhotoUrl(publicUrl)
-    } catch (err: any) {
-      setError(err.message || 'Failed to upload image')
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to upload image'
+      setError(message)
     } finally {
       setUploading(false)
     }

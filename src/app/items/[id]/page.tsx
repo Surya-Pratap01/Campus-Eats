@@ -53,7 +53,15 @@ async function getUserRating(menuItemId: string) {
   return rating
 }
 
-function calculateAverageRating(ratings: any[]) {
+interface RatingDimension {
+  taste: number
+  hygiene: number
+  quantity: number
+  value_for_money: number
+  [key: string]: unknown
+}
+
+function calculateAverageRating(ratings: RatingDimension[]) {
   if (!ratings || ratings.length === 0) return null
 
   const total = ratings.reduce((sum, rating) => {
@@ -64,10 +72,10 @@ function calculateAverageRating(ratings: any[]) {
   return (total / ratings.length).toFixed(1)
 }
 
-function calculateDimensionAverage(ratings: any[], dimension: string) {
+function calculateDimensionAverage(ratings: RatingDimension[], dimension: 'taste' | 'hygiene' | 'quantity' | 'value_for_money') {
   if (!ratings || ratings.length === 0) return null
 
-  const total = ratings.reduce((sum, rating) => sum + rating[dimension], 0)
+  const total = ratings.reduce((sum, rating) => sum + (Number(rating[dimension]) || 0), 0)
   return (total / ratings.length).toFixed(1)
 }
 
@@ -86,32 +94,37 @@ function StarRating({ value }: { value: number }) {
   )
 }
 
-export default async function ItemPage({ params }: { params: { id: string } }) {
-  const menuItem = await getMenuItem(params.id)
+export default async function ItemPage({
+  params,
+}: {
+  params: Promise<{ id: string }> | { id: string }
+}) {
+  const { id } = await Promise.resolve(params)
+  const menuItem = await getMenuItem(id)
   
   if (!menuItem) {
     notFound()
   }
 
-  const ratings = await getRatings(params.id)
-  const userRating = await getUserRating(params.id)
+  const ratings = await getRatings(id)
+  const userRating = await getUserRating(id)
   const avgRating = calculateAverageRating(ratings)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-50">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50/40 to-yellow-50">
       <Navbar />
       
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8">
         <Link
           href={`/outlets/${menuItem.outlet_id}`}
-          className="inline-flex items-center text-orange-600 hover:text-orange-700 font-medium mb-6 transition"
+          className="inline-flex items-center min-h-[44px] px-3.5 py-2 rounded-xl bg-white shadow-2xs border border-gray-200 text-orange-600 hover:text-orange-700 font-semibold text-sm mb-4 sm:mb-6 transition active:scale-95"
         >
           ← Back to {menuItem.outlets.name}
         </Link>
 
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200/80 overflow-hidden mb-6 sm:mb-8">
           {menuItem.photo_url ? (
-            <div className="h-64 overflow-hidden">
+            <div className="h-48 sm:h-64 overflow-hidden relative">
               <img
                 src={menuItem.photo_url}
                 alt={menuItem.name}
@@ -119,30 +132,34 @@ export default async function ItemPage({ params }: { params: { id: string } }) {
               />
             </div>
           ) : (
-            <div className="h-64 bg-gradient-to-br from-orange-400 to-yellow-400 flex items-center justify-center">
-              <span className="text-8xl">🍽️</span>
+            <div className="h-44 sm:h-64 bg-gradient-to-br from-orange-400 to-yellow-400 flex items-center justify-center">
+              <span className="text-7xl sm:text-8xl">🍽️</span>
             </div>
           )}
           
-          <div className="p-8">
-            <div className="flex items-start justify-between mb-4">
+          <div className="p-5 sm:p-8">
+            <div className="flex items-start justify-between gap-3 mb-4">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">{menuItem.name}</h1>
-                <p className="text-gray-500">{menuItem.category}</p>
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-1 leading-tight">
+                  {menuItem.name}
+                </h1>
+                <p className="text-xs sm:text-sm text-gray-500 font-medium">{menuItem.category}</p>
               </div>
               
               {menuItem.price && (
-                <div className="text-right">
-                  <p className="text-2xl font-bold text-orange-600">₹{menuItem.price}</p>
+                <div className="text-right shrink-0">
+                  <p className="text-2xl sm:text-3xl font-extrabold text-orange-600">₹{menuItem.price}</p>
                 </div>
               )}
             </div>
 
             {avgRating && (
-              <div className="flex items-center space-x-2 mb-4">
+              <div className="flex items-center space-x-2">
                 <span className="text-yellow-500 text-2xl">⭐</span>
-                <span className="text-2xl font-bold text-gray-900">{avgRating}</span>
-                <span className="text-gray-500">({ratings.length} rating{ratings.length !== 1 ? 's' : ''})</span>
+                <span className="text-xl sm:text-2xl font-bold text-gray-900">{avgRating}</span>
+                <span className="text-gray-500 text-xs sm:text-sm">
+                  ({ratings.length} student rating{ratings.length !== 1 ? 's' : ''})
+                </span>
               </div>
             )}
           </div>
@@ -150,8 +167,8 @@ export default async function ItemPage({ params }: { params: { id: string } }) {
 
         {/* Rating Breakdown */}
         {ratings.length > 0 && (
-          <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Rating Breakdown</h2>
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200/80 p-5 sm:p-6 mb-6 sm:mb-8">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">Rating Breakdown</h2>
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center">
@@ -194,7 +211,7 @@ export default async function ItemPage({ params }: { params: { id: string } }) {
           <h2 className="text-xl font-bold text-gray-900 mb-4">
             {userRating ? 'Update Your Rating' : 'Rate This Item'}
           </h2>
-          <RatingForm menuItemId={params.id} existingRating={userRating} />
+          <RatingForm menuItemId={id} existingRating={userRating} />
         </div>
 
         {/* Ratings List */}

@@ -15,7 +15,7 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
           supabaseResponse = NextResponse.next({
             request,
           })
@@ -36,7 +36,7 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser()
 
   // Protected routes (exclude auth routes)
-  const publicRoutes = ['/login', '/auth/callback', '/auth/auth-code-error']
+  const publicRoutes = ['/login', '/auth/callback', '/auth/auth-code-error', '/auth/reset-password']
   if (!user && !publicRoutes.some(route => request.nextUrl.pathname.startsWith(route))) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
