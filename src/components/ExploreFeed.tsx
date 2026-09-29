@@ -38,16 +38,28 @@ function ExploreFeedContent({ initialOutlets }: ExploreFeedProps) {
   const [viewMode, setViewMode] = useState<'dishes' | 'outlets'>('dishes')
   const [ratingModalItem, setRatingModalItem] = useState<MenuItemForRating | null>(null)
   const [isRatingModalOpen, setIsRatingModalOpen] = useState(false)
+  const [visibleCount, setVisibleCount] = useState(24)
 
-  // Flatten all menu items with their parent outlet information
+  // Flatten all menu items with their parent outlet information and pre-computed rating stats
   const allDishes = useMemo(() => {
-    const list: (MenuItemWithRatings & { outletName: string; outletLocation?: string | null })[] = []
+    const list: (MenuItemWithRatings & {
+      outletName: string
+      outletLocation?: string | null
+      avgRating: string | null
+      avgRatingNum: number
+      ratingCount: number
+    })[] = []
+
     for (const outlet of initialOutlets) {
       for (const item of outlet.menu_items || []) {
+        const avg = calculateAverageRating(item.ratings || [])
         list.push({
           ...item,
           outletName: outlet.name,
           outletLocation: outlet.location,
+          avgRating: avg,
+          avgRatingNum: avg ? Number(avg) : 0,
+          ratingCount: item.ratings?.length || 0,
         })
       }
     }
@@ -97,13 +109,16 @@ function ExploreFeedContent({ initialOutlets }: ExploreFeedProps) {
           return (b.price || 0) - (a.price || 0)
         }
         if (sortBy === 'rating_desc') {
-          const aRate = Number(calculateAverageRating(a.ratings || [])) || 0
-          const bRate = Number(calculateAverageRating(b.ratings || [])) || 0
-          return bRate - aRate
+          return b.avgRatingNum - a.avgRatingNum
         }
         return a.name.localeCompare(b.name)
       })
   }, [allDishes, searchQuery, selectedCategory, selectedOutlet, sortBy])
+
+  // Progressive rendering slice for high performance
+  const visibleDishes = useMemo(() => {
+    return filteredDishes.slice(0, visibleCount)
+  }, [filteredDishes, visibleCount])
 
   // Filtered outlets
   const filteredOutlets = useMemo(() => {
@@ -138,6 +153,7 @@ function ExploreFeedContent({ initialOutlets }: ExploreFeedProps) {
     setSelectedCategory('All')
     setSelectedOutlet('All')
     setSortBy('default')
+    setVisibleCount(24)
   }
 
   const handleOpenRate = (item: MenuItemWithRatings) => {
@@ -158,7 +174,10 @@ function ExploreFeedContent({ initialOutlets }: ExploreFeedProps) {
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value)
+                setVisibleCount(24)
+              }}
               placeholder="Search across all dishes, outlets, snacks, drinks..."
               className="w-full pl-11 pr-10 py-3.5 bg-gray-50 border border-gray-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition text-base text-gray-900 placeholder:text-gray-400 focus:text-gray-900"
               aria-label="Search dishes and outlets across campus"
@@ -166,7 +185,10 @@ function ExploreFeedContent({ initialOutlets }: ExploreFeedProps) {
             {searchQuery && (
               <button
                 type="button"
-                onClick={() => setSearchQuery('')}
+                onClick={() => {
+                  setSearchQuery('')
+                  setVisibleCount(24)
+                }}
                 className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-600 text-lg min-h-[44px] min-w-[44px] justify-center"
                 aria-label="Clear search"
               >
@@ -185,7 +207,10 @@ function ExploreFeedContent({ initialOutlets }: ExploreFeedProps) {
               <select
                 id="outlet-select"
                 value={selectedOutlet}
-                onChange={(e) => setSelectedOutlet(e.target.value)}
+                onChange={(e) => {
+                  setSelectedOutlet(e.target.value)
+                  setVisibleCount(24)
+                }}
                 className="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm font-medium text-gray-900 focus:ring-2 focus:ring-orange-500 focus:bg-white outline-none transition min-h-[44px]"
               >
                 <option value="All">All Outlets ({initialOutlets.length})</option>
@@ -205,7 +230,10 @@ function ExploreFeedContent({ initialOutlets }: ExploreFeedProps) {
               <select
                 id="sort-select"
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+                onChange={(e) => {
+                  setSortBy(e.target.value as typeof sortBy)
+                  setVisibleCount(24)
+                }}
                 className="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm font-medium text-gray-900 focus:ring-2 focus:ring-orange-500 focus:bg-white outline-none transition min-h-[44px]"
               >
                 <option value="default">Default (A to Z)</option>
@@ -275,7 +303,10 @@ function ExploreFeedContent({ initialOutlets }: ExploreFeedProps) {
                     <button
                       key={category}
                       type="button"
-                      onClick={() => setSelectedCategory(category)}
+                      onClick={() => {
+                        setSelectedCategory(category)
+                        setVisibleCount(24)
+                      }}
                       className={`min-h-[44px] px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all active:scale-95 flex items-center justify-center shrink-0 shadow-2xs snap-start ${
                         isSelected
                           ? 'bg-orange-600 text-white shadow-orange-600/20'
@@ -331,70 +362,87 @@ function ExploreFeedContent({ initialOutlets }: ExploreFeedProps) {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredDishes.map((dish) => {
-              const dishRating = calculateAverageRating(dish.ratings || [])
-              return (
-                <div
-                  key={dish.id}
-                  className="bg-white rounded-2xl shadow-xs border border-gray-200/80 p-4 sm:p-5 flex flex-col justify-between hover:shadow-md transition-all duration-200"
-                >
-                  <div>
-                    <div className="flex items-start justify-between gap-2 mb-1.5">
-                      <h3 className="text-base font-bold text-gray-900 leading-snug line-clamp-2">
-                        {dish.name}
-                      </h3>
-                      {dish.price ? (
-                        <span className="font-extrabold text-orange-600 text-base shrink-0">
-                          ₹{dish.price}
-                        </span>
-                      ) : null}
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-2 mb-3">
-                      <span className="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-md bg-gray-100 text-gray-700">
-                        {getCategoryEmoji(dish.category || 'Other')} {normalizeCategory(dish.category)}
-                      </span>
-                      <Link
-                        href={`/outlets/${dish.outlet_id}`}
-                        className="text-xs text-orange-600 hover:underline font-medium"
-                      >
-                        📍 {dish.outletName}
-                      </Link>
-                    </div>
-                  </div>
-
-                  <div className="pt-3 border-t border-gray-100 flex items-center justify-between gap-2">
+          <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {visibleDishes.map((dish) => {
+                return (
+                  <div
+                    key={dish.id}
+                    className="bg-white rounded-2xl shadow-xs border border-gray-200/80 p-4 sm:p-5 flex flex-col justify-between hover:shadow-md transition-all duration-200"
+                  >
                     <div>
-                      {dishRating ? (
-                        <div className="flex items-center gap-1 text-xs">
-                          <span className="text-yellow-500 font-bold">★ {dishRating}</span>
-                          <span className="text-gray-400">({dish.ratings?.length || 0})</span>
-                        </div>
-                      ) : (
-                        <span className="text-xs text-gray-400">Unrated</span>
-                      )}
+                      <div className="flex items-start justify-between gap-2 mb-1.5">
+                        <h3 className="text-base font-bold text-gray-900 leading-snug line-clamp-2">
+                          {dish.name}
+                        </h3>
+                        {dish.price ? (
+                          <span className="font-extrabold text-orange-600 text-base shrink-0">
+                            ₹{dish.price}
+                          </span>
+                        ) : null}
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-2 mb-3">
+                        <span className="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-md bg-gray-100 text-gray-700">
+                          {getCategoryEmoji(dish.category || 'Other')} {normalizeCategory(dish.category)}
+                        </span>
+                        <Link
+                          href={`/outlets/${dish.outlet_id}`}
+                          className="text-xs text-orange-600 hover:underline font-medium"
+                        >
+                          📍 {dish.outletName}
+                        </Link>
+                      </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                      <Link
-                        href={`/items/${dish.id}`}
-                        className="min-h-[44px] px-3 flex items-center justify-center text-xs font-semibold text-gray-600 hover:text-gray-900 bg-gray-50 hover:bg-gray-100 rounded-lg transition"
-                      >
-                        Details
-                      </Link>
-                      <button
-                        type="button"
-                        onClick={() => handleOpenRate(dish)}
-                        className="min-h-[44px] px-3.5 bg-orange-50 hover:bg-orange-100 active:bg-orange-200 text-orange-600 text-xs font-bold rounded-lg transition active:scale-95"
-                      >
-                        Rate
-                      </button>
+                    <div className="pt-3 border-t border-gray-100 flex items-center justify-between gap-2">
+                      <div>
+                        {dish.avgRating ? (
+                          <div className="flex items-center gap-1 text-xs">
+                            <span className="text-yellow-500 font-bold">★ {dish.avgRating}</span>
+                            <span className="text-gray-400">({dish.ratingCount})</span>
+                          </div>
+                        ) : (
+                          <span className="text-xs text-gray-400">Unrated</span>
+                        )}
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <Link
+                          href={`/items/${dish.id}`}
+                          className="min-h-[44px] px-3 flex items-center justify-center text-xs font-semibold text-gray-600 hover:text-gray-900 bg-gray-50 hover:bg-gray-100 rounded-lg transition"
+                        >
+                          Details
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => handleOpenRate(dish)}
+                          className="min-h-[44px] px-3.5 bg-orange-50 hover:bg-orange-100 active:bg-orange-200 text-orange-600 text-xs font-bold rounded-lg transition active:scale-95"
+                        >
+                          Rate
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
+
+            {filteredDishes.length > visibleCount && (
+              <div className="flex flex-col items-center justify-center pt-6 pb-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setVisibleCount((prev) => Math.min(prev + 24, filteredDishes.length))}
+                  className="min-h-[44px] px-6 py-2.5 bg-white hover:bg-orange-50 border border-orange-200 text-orange-600 font-bold text-sm rounded-xl transition shadow-xs active:scale-95 flex items-center gap-2"
+                >
+                  <span>Load More Dishes ({filteredDishes.length - visibleCount} remaining)</span>
+                  <span>↓</span>
+                </button>
+                <p className="text-xs text-gray-400">
+                  Showing {visibleDishes.length} of {filteredDishes.length} dishes
+                </p>
+              </div>
+            )}
           </div>
         )
       ) : filteredOutlets.length === 0 ? (

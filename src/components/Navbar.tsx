@@ -90,6 +90,7 @@ export default function Navbar() {
 
               <Link
                 href="/explore"
+                prefetch={true}
                 className={`px-3 py-2 rounded-lg font-medium text-sm transition min-h-[44px] flex items-center ${
                   isExploreActive
                     ? 'text-orange-600 bg-orange-50 font-semibold'
@@ -177,6 +178,7 @@ export default function Navbar() {
           {/* Explore / Food Search Tab */}
           <Link
             href="/explore"
+            prefetch={true}
             className={`flex-1 flex flex-col items-center justify-center min-h-[48px] py-1 transition-colors ${
               isExploreActive
                 ? 'text-orange-600 font-semibold'

@@ -1,4 +1,5 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
+import { unstable_cache } from 'next/cache'
 import Navbar from '@/components/Navbar'
 import ExploreFeed from '@/components/ExploreFeed'
 
@@ -7,34 +8,46 @@ export const metadata = {
   description: 'Search all dishes, filter by campus outlet, sort by price or verified rating.',
 }
 
-async function getExploreData() {
-  const supabase = await createClient()
-  const { data: outlets } = await supabase
-    .from('outlets')
-    .select(`
-      id,
-      name,
-      location,
-      description,
-      photo_url,
-      menu_items (
+const getExploreData = unstable_cache(
+  async () => {
+    const supabase = createSupabaseClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+    const { data: outlets, error } = await supabase
+      .from('outlets')
+      .select(`
         id,
-        outlet_id,
         name,
-        category,
-        price,
-        ratings (
-          taste,
-          hygiene,
-          quantity,
-          value_for_money
+        location,
+        description,
+        photo_url,
+        menu_items (
+          id,
+          outlet_id,
+          name,
+          category,
+          price,
+          ratings (
+            taste,
+            hygiene,
+            quantity,
+            value_for_money
+          )
         )
-      )
-    `)
-    .order('name')
+      `)
+      .order('name')
 
-  return outlets || []
-}
+    if (error) {
+      console.error('Error fetching explore data:', error)
+      return []
+    }
+
+    return outlets || []
+  },
+  ['explore-feed-outlets'],
+  { revalidate: 30, tags: ['outlets', 'menu_items', 'ratings'] }
+)
 
 export default async function ExplorePage() {
   const outlets = await getExploreData()

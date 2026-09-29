@@ -25,9 +25,6 @@ export default function Footer() {
             <Link href="/cookie-policy" className="hover:text-orange-600 transition">
               Cookie Policy
             </Link>
-            <Link href="/refund-policy" className="hover:text-orange-600 transition">
-              Refund Policy
-            </Link>
           </div>
         </div>
 

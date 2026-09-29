@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export default function LoginPage() {
   const [mode, setMode] = useState<'login' | 'signup' | 'forgot_password'>('login')
@@ -315,13 +316,19 @@ export default function LoginPage() {
             {mode === 'signup' && (
               <p className="text-xs text-gray-500 text-center leading-relaxed mt-3">
                 By creating an account, you acknowledge that you have read and agree to our{' '}
-                <a href="/terms-and-conditions" target="_blank" rel="noopener noreferrer" className="text-orange-600 hover:underline font-semibold">
+                <Link
+                  href="/terms-and-conditions"
+                  className="text-orange-600 hover:text-orange-700 underline font-semibold transition"
+                >
                   Terms & Conditions
-                </a>{' '}
+                </Link>{' '}
                 and{' '}
-                <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-orange-600 hover:underline font-semibold">
+                <Link
+                  href="/privacy-policy"
+                  className="text-orange-600 hover:text-orange-700 underline font-semibold transition"
+                >
                   Privacy Policy
-                </a>.
+                </Link>.
               </p>
             )}
           </form>
@@ -341,6 +348,23 @@ export default function LoginPage() {
               Only @bennett.edu.in emails are allowed
             </p>
           )}
+
+          {/* Legal Links (Always accessible and clickable on mobile & desktop) */}
+          <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-center gap-4 text-xs text-gray-500">
+            <Link
+              href="/terms-and-conditions"
+              className="text-orange-600 hover:text-orange-700 underline font-semibold transition py-1"
+            >
+              Terms & Conditions
+            </Link>
+            <span className="text-gray-300">•</span>
+            <Link
+              href="/privacy-policy"
+              className="text-orange-600 hover:text-orange-700 underline font-semibold transition py-1"
+            >
+              Privacy Policy
+            </Link>
+          </div>
         </div>
       </div>
     </div>
