@@ -93,7 +93,7 @@ export default function HomeFeed({ initialOutlets }: HomeFeedProps) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search outlets, snacks, meals, drinks..."
-              className="w-full pl-11 pr-10 py-3.5 bg-gray-50 border border-gray-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition text-base text-gray-900 placeholder:text-gray-400"
+              className="w-full pl-11 pr-10 py-3.5 bg-gray-50 border border-gray-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition text-base text-gray-900 placeholder:text-gray-400 focus:text-gray-900"
               aria-label="Search campus food and outlets"
             />
             {searchQuery && (

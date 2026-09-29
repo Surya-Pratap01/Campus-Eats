@@ -3,6 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  color-scheme: light;
 }
 
 @theme inline {
@@ -12,18 +13,38 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Explicit form element text colors to prevent faint/white text in all modes */
+input,
+textarea,
+select {
+  color: #111827 !important; /* Tailwind gray-900 */
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #9ca3af !important; /* Tailwind gray-400 */
+  opacity: 1;
+}
+
+/* Autofill text visibility in mobile browsers */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill {
+  -webkit-text-fill-color: #111827 !important;
+  color: #111827 !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 /* Safe area support for iOS home indicator and notch */

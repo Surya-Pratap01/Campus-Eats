@@ -150,7 +150,7 @@ export default function EditOutletPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
               />
             </div>
 
@@ -163,7 +163,7 @@ export default function EditOutletPage() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={3}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition resize-none"
+                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition resize-none"
               />
             </div>
 
@@ -177,7 +177,7 @@ export default function EditOutletPage() {
                 value={photoUrl}
                 onChange={(e) => setPhotoUrl(e.target.value)}
                 placeholder="https://example.com/photo.jpg"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
               />
             </div>
 
@@ -222,7 +222,7 @@ export default function EditOutletPage() {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="e.g., Near Block A, Ground Floor"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
               />
             </div>
 

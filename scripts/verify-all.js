@@ -79,6 +79,7 @@ async function verifyAll() {
   // TEST 3: Restored Menu Items Verification
   const snapEats = outlets.find(o => o.name === 'Snap Eats')
   const houseOfChow = outlets.find(o => o.name === 'House of Chow')
+  const greenNoxOutlet = outlets.find(o => o.name === 'Green Nox')
 
   const { count: snapCount } = await supabase
     .from('menu_items')
@@ -90,8 +91,14 @@ async function verifyAll() {
     .select('*', { count: 'exact', head: true })
     .eq('outlet_id', houseOfChow.id)
 
+  const { count: gnCount } = await supabase
+    .from('menu_items')
+    .select('*', { count: 'exact', head: true })
+    .eq('outlet_id', greenNoxOutlet.id)
+
   assert(snapCount === 141, `Snap Eats menu items restored (expected: 141, found: ${snapCount})`)
   assert(hocCount === 129, `House of Chow menu items restored (expected: 129, found: ${hocCount})`)
+  assert(gnCount === 74, `Green Nox menu items restored (expected: 74, found: ${gnCount})`)
 
   // TEST 4: Profiles / Admin Schema Structure
   const { data: sampleProfile, error: profileErr } = await supabase

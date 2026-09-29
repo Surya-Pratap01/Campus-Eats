@@ -68,7 +68,7 @@ export default function NewMenuItemPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 focus:text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
               />
             </div>
 
@@ -81,7 +81,7 @@ export default function NewMenuItemPage() {
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 focus:text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
               >
                 <option value="">Select a category</option>
                 <option value="Beverages">🥤 Beverages</option>
@@ -107,7 +107,7 @@ export default function NewMenuItemPage() {
                 step="0.01"
                 min="0"
                 placeholder="e.g., 50"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 focus:text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
               />
             </div>
 
@@ -121,7 +121,7 @@ export default function NewMenuItemPage() {
                 value={photoUrl}
                 onChange={(e) => setPhotoUrl(e.target.value)}
                 placeholder="https://example.com/photo.jpg"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 focus:text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
               />
             </div>
 

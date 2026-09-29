@@ -124,7 +124,7 @@ export default function RatingForm({ menuItemId, existingRating, onRatingSubmitt
           placeholder="Share your experience..."
           rows={3}
           maxLength={300}
-          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition text-base resize-none"
+          className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition text-base text-gray-900 placeholder:text-gray-400 focus:text-gray-900 resize-none"
         />
         <p className="text-sm text-gray-500 mt-1">{comment.length}/300 characters</p>
       </div>
