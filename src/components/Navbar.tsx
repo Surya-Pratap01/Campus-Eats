@@ -49,6 +49,7 @@ export default function Navbar() {
   }
 
   const isHomeActive = pathname === '/'
+  const isExploreActive = pathname === '/explore'
   const isAdminActive = pathname.startsWith('/admin')
   const isLoginActive = pathname.startsWith('/login')
 
@@ -63,7 +64,7 @@ export default function Navbar() {
               className="flex items-center space-x-2 py-2 -ml-2 px-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500"
               aria-label="CampusEats Home"
             >
-              <span className="text-2xl sm:text-3xl">🍽️</span>
+              <span className="text-2xl sm:text-3xl" role="img" aria-label="Campus Eats Logo">🍽️</span>
               <div className="flex flex-col">
                 <span className="text-lg sm:text-xl font-black tracking-tight text-orange-600 leading-tight">
                   CampusEats
@@ -75,7 +76,7 @@ export default function Navbar() {
             </Link>
 
             {/* Desktop Navigation Links (>= sm) */}
-            <div className="hidden sm:flex items-center space-x-4">
+            <div className="hidden sm:flex items-center space-x-2 sm:space-x-4">
               <Link
                 href="/"
                 className={`px-3 py-2 rounded-lg font-medium text-sm transition min-h-[44px] flex items-center ${
@@ -84,7 +85,18 @@ export default function Navbar() {
                     : 'text-gray-700 hover:text-orange-600 hover:bg-gray-50'
                 }`}
               >
-                Outlets
+                Home
+              </Link>
+
+              <Link
+                href="/explore"
+                className={`px-3 py-2 rounded-lg font-medium text-sm transition min-h-[44px] flex items-center ${
+                  isExploreActive
+                    ? 'text-orange-600 bg-orange-50 font-semibold'
+                    : 'text-gray-700 hover:text-orange-600 hover:bg-gray-50'
+                }`}
+              >
+                Explore
               </Link>
 
               {isAdmin && (
@@ -164,9 +176,9 @@ export default function Navbar() {
 
           {/* Explore / Food Search Tab */}
           <Link
-            href="/#explore"
+            href="/explore"
             className={`flex-1 flex flex-col items-center justify-center min-h-[48px] py-1 transition-colors ${
-              pathname === '/' && typeof window !== 'undefined' && window.location.hash === '#explore'
+              isExploreActive
                 ? 'text-orange-600 font-semibold'
                 : 'text-gray-500 hover:text-gray-900'
             }`}

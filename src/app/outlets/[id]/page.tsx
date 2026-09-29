@@ -120,13 +120,13 @@ export default async function OutletPage({
             <div className="h-48 sm:h-64 overflow-hidden relative">
               <img
                 src={outlet.photo_url}
-                alt={outlet.name}
+                alt={`${outlet.name} dining outlet storefront at Bennett University`}
                 className="w-full h-full object-cover"
               />
             </div>
           ) : (
             <div className="h-48 sm:h-64 bg-gradient-to-br from-orange-400 to-yellow-400 flex items-center justify-center">
-              <span className="text-7xl sm:text-8xl">🍽️</span>
+              <span className="text-7xl sm:text-8xl" role="img" aria-label="Campus dining icon">🍽️</span>
             </div>
           )}
           

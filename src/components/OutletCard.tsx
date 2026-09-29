@@ -32,9 +32,14 @@ export interface MenuItemWithRatings {
 interface OutletCardProps {
   outlet: Outlet
   avgRating: string | null
+  onRatingUpdated?: () => void
 }
 
-export default function OutletCard({ outlet, avgRating: outletAvgRating }: OutletCardProps) {
+export default function OutletCard({
+  outlet,
+  avgRating: outletAvgRating,
+  onRatingUpdated,
+}: OutletCardProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [menuItems, setMenuItems] = useState<MenuItemWithRatings[]>(outlet.menu_items || [])
   const [searchQuery, setSearchQuery] = useState('')
@@ -121,6 +126,7 @@ export default function OutletCard({ outlet, avgRating: outletAvgRating }: Outle
 
   const handleRatingSubmitted = async () => {
     await fetchMenuItems()
+    onRatingUpdated?.()
   }
 
   const getCategoryEmoji = (category: string) => {
@@ -130,6 +136,8 @@ export default function OutletCard({ outlet, avgRating: outletAvgRating }: Outle
       'Meals': '🍛',
       'Desserts': '🍰',
       'Fast Food': '🍔',
+      'Burger': '🍔',
+      'Sandwich': '🥪',
       'Chinese': '🥡',
       'South Indian': '🥘',
       'North Indian': '🍲',
@@ -147,6 +155,22 @@ export default function OutletCard({ outlet, avgRating: outletAvgRating }: Outle
 
     return (total / ratings.length).toFixed(1)
   }
+
+  const currentOutletAvgRating = useMemo(() => {
+    if (menuItems.length > 0) {
+      const allRatings = menuItems.flatMap((item) => item.ratings || [])
+      const computed = calculateAverageRating(allRatings)
+      if (computed !== null) return computed
+    }
+    return outletAvgRating
+  }, [menuItems, outletAvgRating])
+
+  const totalRatingCount = useMemo(() => {
+    if (menuItems.length > 0) {
+      return menuItems.reduce((acc, item) => acc + (item.ratings?.length || 0), 0)
+    }
+    return (outlet.menu_items || []).reduce((acc, item) => acc + (item.ratings?.length || 0), 0)
+  }, [menuItems, outlet.menu_items])
 
   // Group menu items by category
   const groupedItems = filteredMenuItems.reduce(
@@ -171,7 +195,7 @@ export default function OutletCard({ outlet, avgRating: outletAvgRating }: Outle
             <div className="h-44 sm:h-48 overflow-hidden relative">
               <img
                 src={outlet.photo_url}
-                alt={outlet.name}
+                alt={`${outlet.name} storefront at Bennett University`}
                 className="w-full h-full object-cover"
               />
               <div className="absolute top-3 right-3">
@@ -182,7 +206,7 @@ export default function OutletCard({ outlet, avgRating: outletAvgRating }: Outle
             </div>
           ) : (
             <div className="h-44 sm:h-48 bg-gradient-to-br from-orange-400 to-yellow-400 flex items-center justify-center relative">
-              <span className="text-6xl">🍽️</span>
+              <span className="text-6xl" role="img" aria-label="Campus outlet dining icon">🍽️</span>
               <div className="absolute top-3 right-3">
                 <span className="bg-black/40 backdrop-blur-xs text-white text-xs font-semibold px-2.5 py-1 rounded-full">
                   {itemsCount > 0 ? `${itemsCount} items` : 'Menu coming soon'}
@@ -194,14 +218,20 @@ export default function OutletCard({ outlet, avgRating: outletAvgRating }: Outle
           <div className="p-5 sm:p-6">
             <div className="flex items-start justify-between gap-2 mb-2">
               <h2 className="text-xl font-bold text-gray-900 leading-snug">{outlet.name}</h2>
-              <div className="flex items-center space-x-1 shrink-0 bg-yellow-50 px-2 py-0.5 rounded-lg border border-yellow-200/60">
-                {outletAvgRating ? (
+              <div
+                className="flex items-center space-x-1 shrink-0 bg-yellow-50 px-2 py-0.5 rounded-lg border border-yellow-200/60"
+                aria-label={`Overall rating: ${currentOutletAvgRating || 'Unrated'}`}
+              >
+                {currentOutletAvgRating ? (
                   <>
-                    <span className="text-yellow-600 text-sm">⭐</span>
-                    <span className="font-bold text-gray-900 text-sm">{outletAvgRating}</span>
+                    <span className="text-yellow-600 text-sm" aria-hidden="true">⭐</span>
+                    <span className="font-bold text-gray-900 text-sm">{currentOutletAvgRating}</span>
+                    {totalRatingCount > 0 && (
+                      <span className="text-xs text-gray-500 font-medium">({totalRatingCount})</span>
+                    )}
                   </>
                 ) : (
-                  <span className="text-gray-400 text-xs">Unrated</span>
+                  <span className="text-gray-500 text-xs font-medium">Unrated</span>
                 )}
               </div>
             </div>

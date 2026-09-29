@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 interface ExistingRating {
@@ -26,6 +27,7 @@ export default function RatingForm({ menuItemId, existingRating, onRatingSubmitt
   const [comment, setComment] = useState(existingRating?.comment || '')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
+  const router = useRouter()
   const supabase = createClient()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -68,6 +70,7 @@ export default function RatingForm({ menuItemId, existingRating, onRatingSubmitt
     } else {
       setMessage(existingRating ? 'Rating updated successfully!' : 'Rating submitted successfully!')
       onRatingSubmitted?.()
+      router.refresh()
       // Clear form after successful submission
       if (!existingRating) {
         setTaste(0)
@@ -100,7 +103,10 @@ export default function RatingForm({ menuItemId, existingRating, onRatingSubmitt
       setQuantity(0)
       setValueForMoney(0)
       setComment('')
+      onRatingSubmitted?.()
+      router.refresh()
     }
+
     setLoading(false)
   }
 

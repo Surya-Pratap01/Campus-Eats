@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import OutletCard, { Outlet, RatingDimension } from './OutletCard'
+import { normalizeCategory } from '@/lib/categories'
 
 interface HomeFeedProps {
   initialOutlets: Outlet[]
@@ -27,13 +28,13 @@ export default function HomeFeed({ initialOutlets }: HomeFeedProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
 
-  // Extract all unique categories across outlets
+  // Extract all unique categories across outlets using canonical normalization
   const categories = useMemo(() => {
     const set = new Set<string>()
     for (const outlet of initialOutlets) {
       for (const item of outlet.menu_items || []) {
         if (item.category && item.category.trim()) {
-          set.add(item.category.trim())
+          set.add(normalizeCategory(item.category))
         }
       }
     }
@@ -45,10 +46,10 @@ export default function HomeFeed({ initialOutlets }: HomeFeedProps) {
     const query = searchQuery.trim().toLowerCase()
 
     return initialOutlets.filter((outlet) => {
-      // Category filtering
+      // Canonical category filtering
       if (selectedCategory !== 'All') {
         const hasCategoryItem = (outlet.menu_items || []).some(
-          (item) => item.category?.toLowerCase() === selectedCategory.toLowerCase()
+          (item) => normalizeCategory(item.category) === selectedCategory
         )
         if (!hasCategoryItem) return false
       }
@@ -62,7 +63,7 @@ export default function HomeFeed({ initialOutlets }: HomeFeedProps) {
       const menuItemMatches = (outlet.menu_items || []).some(
         (item) =>
           item.name.toLowerCase().includes(query) ||
-          item.category?.toLowerCase().includes(query)
+          normalizeCategory(item.category).toLowerCase().includes(query)
       )
 
       return outletNameMatches || outletDescMatches || outletLocMatches || menuItemMatches
@@ -108,32 +109,44 @@ export default function HomeFeed({ initialOutlets }: HomeFeedProps) {
             )}
           </div>
 
-          {/* Category Filter Pills (Finger-friendly horizontal scroll) */}
+          {/* Category Filter Pills (Finger-friendly horizontal scroll with safe padding) */}
           {categories.length > 1 && (
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 -mx-1 px-1 scrollbar-hide">
-              {categories.map((category) => {
-                const isSelected = selectedCategory === category
-                return (
-                  <button
-                    key={category}
-                    type="button"
-                    onClick={() => setSelectedCategory(category)}
-                    className={`min-h-[44px] px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all active:scale-95 flex items-center justify-center shrink-0 shadow-2xs ${
-                      isSelected
-                        ? 'bg-orange-600 text-white shadow-orange-600/20'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                  >
-                    {category}
-                  </button>
-                )
-              })}
+            <div className="pt-2">
+              <div className="flex items-center justify-between text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                <span>Browse by Category</span>
+                <span className="text-gray-400 font-normal">Swipe to see all ({categories.length - 1})</span>
+              </div>
+              <div
+                className="flex items-center gap-2.5 overflow-x-auto py-2 -mx-2 px-2 scrollbar-none snap-x"
+                tabIndex={0}
+                aria-label="Filter food outlets by category"
+              >
+                {categories.map((category) => {
+                  const isSelected = selectedCategory === category
+                  return (
+                    <button
+                      key={category}
+                      type="button"
+                      onClick={() => setSelectedCategory(category)}
+                      className={`min-h-[44px] px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all active:scale-95 flex items-center justify-center shrink-0 shadow-2xs snap-start ${
+                        isSelected
+                          ? 'bg-orange-600 text-white shadow-orange-600/20'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      {category}
+                    </button>
+                  )
+                })}
+                {/* Spacer element at end to ensure the last category pill is never clipped */}
+                <div className="w-4 shrink-0" aria-hidden="true" />
+              </div>
             </div>
           )}
         </div>
 
         {/* Quick Discovery Stats Bar */}
-        <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 text-xs text-gray-500">
+        <div className="flex items-center justify-between mt-4 pt-3.5 border-t border-gray-100 text-xs text-gray-500">
           <span>
             Showing <strong className="text-gray-800">{filteredOutlets.length}</strong> of{' '}
             {initialOutlets.length} outlets

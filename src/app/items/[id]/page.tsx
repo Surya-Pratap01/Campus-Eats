@@ -127,13 +127,13 @@ export default async function ItemPage({
             <div className="h-48 sm:h-64 overflow-hidden relative">
               <img
                 src={menuItem.photo_url}
-                alt={menuItem.name}
+                alt={`${menuItem.name} dish served at ${menuItem.outlets.name}`}
                 className="w-full h-full object-cover"
               />
             </div>
           ) : (
             <div className="h-44 sm:h-64 bg-gradient-to-br from-orange-400 to-yellow-400 flex items-center justify-center">
-              <span className="text-7xl sm:text-8xl">🍽️</span>
+              <span className="text-7xl sm:text-8xl" role="img" aria-label="Campus dish icon">🍽️</span>
             </div>
           )}
           

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 interface RatingProfile {
@@ -94,6 +95,7 @@ function RatingModalDialog({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [itemReviews, setItemReviews] = useState<CommunityReview[]>([])
+  const router = useRouter()
   const supabase = createClient()
 
   useEffect(() => {
@@ -209,6 +211,7 @@ function RatingModalDialog({
         setError(submitError.message || 'Failed to submit rating. Please try again.')
       } else {
         onRatingSubmitted?.()
+        router.refresh()
         onClose()
       }
     } catch (err: unknown) {
@@ -237,6 +240,7 @@ function RatingModalDialog({
         setError('Failed to delete rating.')
       } else {
         onRatingSubmitted?.()
+        router.refresh()
         onClose()
       }
     } catch (err: unknown) {

@@ -29,23 +29,41 @@ async function getOutlets() {
 
 export default async function Home() {
   const outlets = await getOutlets()
+  const totalVerifiedDishes = outlets.reduce((sum, o) => sum + (o.menu_items?.length || 0), 0)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50/40 to-yellow-50">
       <Navbar />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8">
-        {/* Mobile-First Header */}
+        {/* Campus Dashboard Header */}
         <div className="text-center mb-6 sm:mb-8">
-          <span className="inline-block px-3 py-1 bg-orange-100 text-orange-800 text-xs font-bold rounded-full mb-2">
-            Bennett University Campus Dining
-          </span>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-100 text-orange-800 text-xs font-bold rounded-full mb-3 shadow-2xs">
+            <span>🎓</span>
+            <span>Bennett University Dining Hub</span>
+          </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
-            🍽️ Campus Food Outlets
+            🍽️ Campus Food Directory & Ratings
           </h1>
-          <p className="text-sm sm:text-base text-gray-600 mt-1 max-w-xl mx-auto">
-            Discover menus, search your favorite campus food, and submit verified student ratings.
+          <p className="text-sm sm:text-base text-gray-600 mt-2 max-w-2xl mx-auto leading-relaxed">
+            Browse verified menus across all Bennett University dining spots, search your favorite food, and read honest peer reviews.
           </p>
+
+          {/* Quick Real-Data Campus Pulse */}
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mt-4 text-xs font-semibold text-gray-700">
+            <span className="px-3 py-1.5 bg-white border border-gray-200/80 rounded-xl shadow-2xs flex items-center gap-1.5">
+              <span>🏪</span>
+              <span><strong>{outlets.length}</strong> Campus Outlets</span>
+            </span>
+            <span className="px-3 py-1.5 bg-white border border-gray-200/80 rounded-xl shadow-2xs flex items-center gap-1.5">
+              <span>🍲</span>
+              <span><strong>{totalVerifiedDishes}</strong> Verified Dishes</span>
+            </span>
+            <span className="px-3 py-1.5 bg-white border border-gray-200/80 rounded-xl shadow-2xs flex items-center gap-1.5">
+              <span>⭐</span>
+              <span>Taste • Hygiene • Quantity • Value</span>
+            </span>
+          </div>
         </div>
 
         {outlets.length === 0 ? (

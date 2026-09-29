@@ -120,14 +120,19 @@ export default function LoginPage() {
           setError(signInError.message)
         }
       } else if (data.user) {
-        router.push('/')
-        router.refresh()
+        // Immediate clean navigation to home with authenticated cookies; keep loading=true to prevent duplicate clicks
+        window.location.href = '/'
+        return
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to sign in. Please try again.'
       setError(message)
-    } finally {
       setLoading(false)
+    } finally {
+      // If we errored out, re-enable button
+      if (error) {
+        setLoading(false)
+      }
     }
   }
 
@@ -299,13 +304,26 @@ export default function LoginPage() {
                   ? 'Creating Account...'
                   : mode === 'forgot_password'
                   ? 'Sending Reset Link...'
-                  : 'Signing In...'
+                  : 'Signing in...'
                 : mode === 'signup'
                 ? 'Create Account'
                 : mode === 'forgot_password'
                 ? 'Send Reset Link'
                 : 'Login'}
             </button>
+
+            {mode === 'signup' && (
+              <p className="text-xs text-gray-500 text-center leading-relaxed mt-3">
+                By creating an account, you acknowledge that you have read and agree to our{' '}
+                <a href="/terms-and-conditions" target="_blank" rel="noopener noreferrer" className="text-orange-600 hover:underline font-semibold">
+                  Terms & Conditions
+                </a>{' '}
+                and{' '}
+                <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-orange-600 hover:underline font-semibold">
+                  Privacy Policy
+                </a>.
+              </p>
+            )}
           </form>
 
           {mode === 'forgot_password' ? (

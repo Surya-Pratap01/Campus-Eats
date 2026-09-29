@@ -2,37 +2,35 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 
-async function getOutlets() {
-  const supabase = await createClient()
-  const { data: outlets } = await supabase
-    .from('outlets')
-    .select(`
-      *,
-      menu_items (id)
-    `)
-    .order('name')
-
-  return outlets || []
-}
-
-async function getReportedRatings() {
-  const supabase = await createClient()
-  const { data: ratings } = await supabase
-    .from('ratings')
-    .select(`
-      *,
-      menu_items (name, outlets (name)),
-      profiles (full_name, email)
-    `)
-    .eq('reported', true)
-    .order('created_at', { ascending: false })
-
-  return ratings || []
-}
-
 export default async function AdminPage() {
-  const outlets = await getOutlets()
-  const reportedRatings = await getReportedRatings()
+  const supabase = await createClient()
+  
+  // Parallelize independent database queries
+  const [outletsResult, ratingsResult] = await Promise.all([
+    supabase
+      .from('outlets')
+      .select('id, name, location, description, photo_url, menu_items(id)')
+      .order('name'),
+    supabase
+      .from('ratings')
+      .select(`
+        id,
+        taste,
+        hygiene,
+        quantity,
+        value_for_money,
+        comment,
+        reported,
+        created_at,
+        menu_items (name, outlets (name)),
+        profiles (full_name, email)
+      `)
+      .eq('reported', true)
+      .order('created_at', { ascending: false })
+  ])
+
+  const outlets = outletsResult.data || []
+  const reportedRatings = ratingsResult.data || []
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-50">
@@ -140,39 +138,45 @@ export default async function AdminPage() {
             <p className="text-gray-500 text-center py-6 bg-gray-50 rounded-xl">No reported comments. All clear!</p>
           ) : (
             <div className="space-y-4">
-              {reportedRatings.map((rating) => (
-                <div key={rating.id} className="p-4 bg-red-50/70 border border-red-200 rounded-xl">
-                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-2">
-                    <div>
-                      <p className="font-bold text-gray-900 text-sm">
-                        {rating.profiles.full_name || rating.profiles.email}
-                      </p>
-                      <p className="text-xs text-gray-600 mt-0.5">
-                        On: {rating.menu_items.name} ({rating.menu_items.outlets.name})
-                      </p>
+              {reportedRatings.map((rating) => {
+                const profile = Array.isArray(rating.profiles) ? rating.profiles[0] : rating.profiles
+                const menuItem = Array.isArray(rating.menu_items) ? rating.menu_items[0] : rating.menu_items
+                const outlet = menuItem && (Array.isArray(menuItem.outlets) ? menuItem.outlets[0] : menuItem.outlets)
+
+                return (
+                  <div key={rating.id} className="p-4 bg-red-50/70 border border-red-200 rounded-xl">
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-2">
+                      <div>
+                        <p className="font-bold text-gray-900 text-sm">
+                          {profile?.full_name || profile?.email || 'Student'}
+                        </p>
+                        <p className="text-xs text-gray-600 mt-0.5">
+                          On: {menuItem?.name || 'Item'} ({outlet?.name || 'Outlet'})
+                        </p>
+                      </div>
+                      <form action={`/admin/ratings/${rating.id}/delete`} method="POST">
+                        <button
+                          type="submit"
+                          className="min-h-[44px] px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold text-xs rounded-xl transition active:scale-95 flex items-center justify-center"
+                        >
+                          Delete Comment
+                        </button>
+                      </form>
                     </div>
-                    <form action={`/admin/ratings/${rating.id}/delete`} method="POST">
-                      <button
-                        type="submit"
-                        className="min-h-[44px] px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold text-xs rounded-xl transition active:scale-95 flex items-center justify-center"
-                      >
-                        Delete Comment
-                      </button>
-                    </form>
+                    
+                    {rating.comment && (
+                      <p className="text-gray-800 text-sm mt-2 p-2.5 bg-white/80 rounded-lg">{rating.comment}</p>
+                    )}
+                    
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs mt-3 text-gray-600 font-medium">
+                      <div>Taste: {rating.taste}/5</div>
+                      <div>Hygiene: {rating.hygiene}/5</div>
+                      <div>Quantity: {rating.quantity}/5</div>
+                      <div>Value: {rating.value_for_money}/5</div>
+                    </div>
                   </div>
-                  
-                  {rating.comment && (
-                    <p className="text-gray-800 text-sm mt-2 p-2.5 bg-white/80 rounded-lg">{rating.comment}</p>
-                  )}
-                  
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs mt-3 text-gray-600 font-medium">
-                    <div>Taste: {rating.taste}/5</div>
-                    <div>Hygiene: {rating.hygiene}/5</div>
-                    <div>Quantity: {rating.quantity}/5</div>
-                    <div>Value: {rating.value_for_money}/5</div>
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           )}
         </div>
