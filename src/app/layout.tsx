@@ -1,16 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, Inter } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/Footer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700", "800"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const viewport: Viewport = {
@@ -18,12 +22,12 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   viewportFit: "cover",
-  themeColor: "#ea580c",
+  themeColor: "#0D9488",
 };
 
 export const metadata: Metadata = {
   title: "Campus Eats | Bennett University",
-  description: "Discover, explore, and rate food outlets across Bennett University campus.",
+  description: "Real campus ratings across Bennett University dining spots. Taste, Hygiene, Quantity, and Value for Money.",
 };
 
 export default function RootLayout({
@@ -34,12 +38,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${plusJakartaSans.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col overflow-x-hidden pb-16 sm:pb-0">
+      <body className="min-h-full flex flex-col overflow-x-hidden pb-16 sm:pb-0 bg-[#F0FBFA] text-[#1F2937] font-sans">
         <div className="flex-1">{children}</div>
         <Footer />
       </body>
     </html>
   );
 }
+

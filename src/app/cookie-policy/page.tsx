@@ -1,4 +1,5 @@
 import Navbar from '@/components/Navbar'
+import { Check } from 'lucide-react'
 
 export const metadata = {
   title: 'Cookie Policy | Campus Eats',
@@ -7,19 +8,19 @@ export const metadata = {
 
 export default function CookiePolicyPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50/40 to-yellow-50 flex flex-col">
+    <div className="min-h-screen bg-[#F0FBFA] flex flex-col">
       <Navbar />
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 flex-1">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200/80 p-6 sm:p-10 text-gray-800 space-y-8">
+        <div className="bg-white rounded-2xl shadow-sm border border-[#D5EAE7] p-6 sm:p-10 text-[#1F2937] space-y-8">
           <div>
-            <span className="inline-block px-3 py-1 bg-orange-100 text-orange-800 text-xs font-bold rounded-full mb-3">
+            <span className="inline-block px-3 py-1 bg-[#E6F7F5] text-[#0D9488] border border-[#D5EAE7] text-xs font-bold rounded-full mb-3">
               Technical Storage Audit
             </span>
-            <h1 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl font-black text-[#1F2937] tracking-tight">
               Cookie & Session Storage Policy
             </h1>
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-[#728783] mt-2">
               Last updated: September 2026 • Accurate audit of storage mechanisms used by Campus Eats
             </p>
           </div>
@@ -74,7 +75,10 @@ export default function CookiePolicyPage() {
               3. Absence of Tracking & Marketing Cookies
             </h2>
             <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-emerald-900 text-sm space-y-1">
-              <p className="font-bold">✓ Zero Advertising or Cross-Site Tracking</p>
+              <p className="font-bold flex items-center gap-1.5">
+                <Check className="w-4 h-4 text-emerald-700" />
+                Zero Advertising or Cross-Site Tracking
+              </p>
               <p className="text-xs sm:text-sm leading-relaxed text-emerald-800">
                 Campus Eats does NOT use Google Analytics, Meta Pixels, advertising SDKs, commercial trackers, or third-party behavioral cookies. Because we only use strictly necessary session cookies essential for core account functionality, no invasive cookie tracking banner is required.
               </p>

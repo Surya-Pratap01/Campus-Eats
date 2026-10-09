@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { Star, X } from 'lucide-react'
 
 interface RatingProfile {
   email: string | null
@@ -49,7 +50,7 @@ function StarRatingInput({
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-2.5 border-b border-gray-100 last:border-b-0 gap-1.5 sm:gap-0">
       <div className="flex items-center justify-between">
         <span className="text-sm font-semibold text-gray-800">{label}</span>
-        <span className="text-xs font-bold text-orange-600 sm:hidden">
+        <span className="text-xs font-bold text-[#0D9488] sm:hidden">
           {(hoverValue || value) > 0 ? `${hoverValue || value} / 5` : 'Not rated'}
         </span>
       </div>
@@ -64,11 +65,15 @@ function StarRatingInput({
               onMouseEnter={() => setHoverValue(star)}
               onMouseLeave={() => setHoverValue(0)}
               aria-label={`Rate ${label} ${star} of 5`}
-              className={`w-11 h-11 flex items-center justify-center text-3xl sm:text-2xl rounded-xl transition-all active:scale-90 focus:outline-none focus:ring-2 focus:ring-orange-400 ${
-                active ? 'text-amber-400 bg-amber-50/50 sm:bg-transparent' : 'text-gray-300'
+              className={`w-11 h-11 flex items-center justify-center rounded-xl transition-all active:scale-90 focus:outline-none focus:ring-2 focus:ring-[#0D9488] ${
+                active ? 'bg-amber-50/50 sm:bg-transparent' : ''
               }`}
             >
-              {active ? '★' : '☆'}
+              <Star
+                className={`w-6 h-6 transition-colors ${
+                  active ? 'text-amber-500 fill-amber-500' : 'text-gray-300'
+                }`}
+              />
             </button>
           )
         })}
@@ -270,10 +275,10 @@ function RatingModalDialog({
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 sm:top-5 sm:right-5 w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-600 transition text-2xl font-bold rounded-full hover:bg-gray-100"
+          className="absolute top-4 right-4 sm:top-5 sm:right-5 w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-600 transition rounded-full hover:bg-gray-100"
           aria-label="Close"
         >
-          ✕
+          <X className="w-5 h-5" />
         </button>
 
         {/* Modal Header */}
@@ -284,13 +289,13 @@ function RatingModalDialog({
           <div className="flex items-center gap-2 mt-1 text-xs sm:text-sm text-gray-500">
             {item.category && <span>{item.category}</span>}
             {item.category && item.price && <span>•</span>}
-            {item.price ? <span className="font-semibold text-orange-600">₹{item.price}</span> : null}
+            {item.price ? <span className="font-bold text-[#0D9488]">₹{item.price}</span> : null}
           </div>
         </div>
 
         {/* Rating Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="bg-gray-50 rounded-2xl p-3.5 sm:p-4 border border-gray-100">
+          <div className="bg-[#F8FDFA] rounded-2xl p-3.5 sm:p-4 border border-[#D5EAE7]">
             <StarRatingInput label="Taste" value={taste} onChange={setTaste} />
             <StarRatingInput label="Quantity" value={quantity} onChange={setQuantity} />
             <StarRatingInput label="Value for Money" value={valueForMoney} onChange={setValueForMoney} />
@@ -308,7 +313,7 @@ function RatingModalDialog({
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               placeholder="Write your experience with this food..."
-              className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition text-base text-gray-900 placeholder:text-gray-400 focus:text-gray-900 resize-none"
+              className="w-full px-4 py-3 bg-white border border-[#D5EAE7] rounded-xl focus:ring-2 focus:ring-[#0D9488] focus:border-transparent outline-none transition text-base text-gray-900 placeholder:text-gray-400 focus:text-gray-900 resize-none"
             />
             <p className="text-right text-xs text-gray-400 mt-1">{comment.length}/300</p>
           </div>
@@ -323,7 +328,7 @@ function RatingModalDialog({
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 px-4 rounded-xl transition disabled:opacity-50 text-sm shadow-sm min-h-[48px] flex items-center justify-center active:scale-98"
+              className="flex-1 bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold py-3.5 px-4 rounded-xl transition disabled:opacity-50 text-sm shadow-sm min-h-[48px] flex items-center justify-center active:scale-98"
             >
               {loading
                 ? 'Submitting...'
@@ -371,7 +376,10 @@ function RatingModalDialog({
                       <span className="font-semibold text-gray-800 truncate max-w-[180px]">
                         {rev.profiles?.full_name || rev.profiles?.email || 'Student'}
                       </span>
-                      <span className="text-orange-600 font-bold">★ {avg}</span>
+                      <span className="text-[#0D9488] font-bold inline-flex items-center gap-1">
+                        <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+                        {avg}
+                      </span>
                     </div>
                     <div className="text-gray-500 flex flex-wrap gap-x-3 gap-y-0.5 text-[11px]">
                       <span>Taste: {rev.taste}</span>

@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar'
 import { notFound } from 'next/navigation'
 import RatingForm from '@/components/RatingForm'
 import ReportButton from '@/components/ReportButton'
+import { Star, ArrowLeft, Utensils, Sparkles } from 'lucide-react'
 
 async function getMenuItem(id: string) {
   const supabase = await createClient()
@@ -81,14 +82,12 @@ function calculateDimensionAverage(ratings: RatingDimension[], dimension: 'taste
 
 function StarRating({ value }: { value: number }) {
   return (
-    <div className="flex space-x-1">
+    <div className="flex space-x-1 justify-center">
       {[1, 2, 3, 4, 5].map((star) => (
-        <span
+        <Star
           key={star}
-          className={star <= value ? 'text-yellow-500' : 'text-gray-300'}
-        >
-          ⭐
-        </span>
+          className={`w-3.5 h-3.5 ${star <= value ? 'text-amber-500 fill-amber-500' : 'text-gray-300'}`}
+        />
       ))}
     </div>
   )
@@ -111,18 +110,18 @@ export default async function ItemPage({
   const avgRating = calculateAverageRating(ratings)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50/40 to-yellow-50">
+    <div className="min-h-screen bg-[#F0FBFA]">
       <Navbar />
       
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8">
         <Link
           href={`/outlets/${menuItem.outlet_id}`}
-          className="inline-flex items-center min-h-[44px] px-3.5 py-2 rounded-xl bg-white shadow-2xs border border-gray-200 text-orange-600 hover:text-orange-700 font-semibold text-sm mb-4 sm:mb-6 transition active:scale-95"
+          className="inline-flex items-center min-h-[44px] px-3.5 py-2 rounded-xl bg-white shadow-2xs border border-[#D5EAE7] text-[#0D9488] hover:text-[#0f766e] font-semibold text-sm mb-4 sm:mb-6 transition active:scale-95 gap-1.5"
         >
-          ← Back to {menuItem.outlets.name}
+          <ArrowLeft className="w-4 h-4" /> Back to {menuItem.outlets.name}
         </Link>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200/80 overflow-hidden mb-6 sm:mb-8">
+        <div className="bg-white rounded-2xl shadow-sm border border-[#D5EAE7] overflow-hidden mb-6 sm:mb-8">
           {menuItem.photo_url ? (
             <div className="h-48 sm:h-64 overflow-hidden relative">
               <img
@@ -132,8 +131,8 @@ export default async function ItemPage({
               />
             </div>
           ) : (
-            <div className="h-44 sm:h-64 bg-gradient-to-br from-orange-400 to-yellow-400 flex items-center justify-center">
-              <span className="text-7xl sm:text-8xl" role="img" aria-label="Campus dish icon">🍽️</span>
+            <div className="h-44 sm:h-64 bg-gradient-to-br from-teal-50 to-emerald-100 flex items-center justify-center">
+              <Utensils className="w-20 h-20 text-teal-600/70" aria-label="Campus dish icon" />
             </div>
           )}
           
@@ -148,14 +147,14 @@ export default async function ItemPage({
               
               {menuItem.price && (
                 <div className="text-right shrink-0">
-                  <p className="text-2xl sm:text-3xl font-extrabold text-orange-600">₹{menuItem.price}</p>
+                  <p className="text-2xl sm:text-3xl font-extrabold text-[#0D9488]">₹{menuItem.price}</p>
                 </div>
               )}
             </div>
 
             {avgRating && (
               <div className="flex items-center space-x-2">
-                <span className="text-yellow-500 text-2xl">⭐</span>
+                <Star className="w-6 h-6 text-amber-500 fill-amber-500 shrink-0" />
                 <span className="text-xl sm:text-2xl font-bold text-gray-900">{avgRating}</span>
                 <span className="text-gray-500 text-xs sm:text-sm">
                   ({ratings.length} student rating{ratings.length !== 1 ? 's' : ''})
@@ -167,7 +166,7 @@ export default async function ItemPage({
 
         {/* Rating Breakdown */}
         {ratings.length > 0 && (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200/80 p-5 sm:p-6 mb-6 sm:mb-8">
+          <div className="bg-white rounded-2xl shadow-sm border border-[#D5EAE7] p-5 sm:p-6 mb-6 sm:mb-8">
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">Rating Breakdown</h2>
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -207,7 +206,7 @@ export default async function ItemPage({
         )}
 
         {/* Rating Form */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+        <div className="bg-white rounded-2xl shadow-lg border border-[#D5EAE7] p-6 mb-8">
           <h2 className="text-xl font-bold text-gray-900 mb-4">
             {userRating ? 'Update Your Rating' : 'Rate This Item'}
           </h2>
@@ -215,20 +214,20 @@ export default async function ItemPage({
         </div>
 
         {/* Ratings List */}
-        <div className="bg-white rounded-2xl shadow-lg p-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-[#D5EAE7] p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">
             Student Reviews ({ratings.length})
           </h2>
           
           {ratings.length === 0 ? (
             <div className="text-center py-8">
-              <div className="text-4xl mb-2">✨</div>
+              <Sparkles className="w-10 h-10 text-teal-500/70 mx-auto mb-2" />
               <p className="text-gray-500">No ratings yet — be the first to try this!</p>
             </div>
           ) : (
             <div className="space-y-4">
               {ratings.map((rating) => (
-                <div key={rating.id} className="border-b border-gray-200 pb-4 last:border-0">
+                <div key={rating.id} className="border-b border-gray-100 pb-4 last:border-0">
                   <div className="flex items-start justify-between mb-2">
                     <div>
                       <p className="font-semibold text-gray-900">
@@ -239,7 +238,7 @@ export default async function ItemPage({
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-orange-600">
+                      <p className="font-bold text-[#0D9488]">
                         {((rating.taste + rating.hygiene + rating.quantity + rating.value_for_money) / 4).toFixed(1)}
                       </p>
                     </div>

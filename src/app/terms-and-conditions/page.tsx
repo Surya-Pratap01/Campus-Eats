@@ -7,19 +7,19 @@ export const metadata = {
 
 export default function TermsAndConditionsPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50/40 to-yellow-50 flex flex-col">
+    <div className="min-h-screen bg-[#F0FBFA] flex flex-col">
       <Navbar />
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 flex-1">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200/80 p-6 sm:p-10 text-gray-800 space-y-8">
+        <div className="bg-white rounded-2xl shadow-sm border border-[#D5EAE7] p-6 sm:p-10 text-[#1F2937] space-y-8">
           <div>
-            <span className="inline-block px-3 py-1 bg-orange-100 text-orange-800 text-xs font-bold rounded-full mb-3">
+            <span className="inline-block px-3 py-1 bg-[#E6F7F5] text-[#0D9488] border border-[#D5EAE7] text-xs font-bold rounded-full mb-3">
               User Agreement
             </span>
-            <h1 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl font-black text-[#1F2937] tracking-tight">
               Terms & Conditions
             </h1>
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-[#728783] mt-2">
               Last updated: September 2026 • Governing use of Campus Eats at Bennett University
             </p>
           </div>
@@ -99,7 +99,7 @@ export default function TermsAndConditionsPage() {
               </p>
               <p>
                 <strong>Support & Inquiries:</strong>{' '}
-                <a href="mailto:suryarathore051@gmail.com" className="text-orange-600 font-semibold hover:underline">
+                <a href="mailto:suryarathore051@gmail.com" className="text-[#0D9488] font-semibold hover:underline">
                   suryarathore051@gmail.com
                 </a>
               </p>

@@ -53,20 +53,20 @@ export default async function ExplorePage() {
   const outlets = await getExploreData()
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50/40 to-yellow-50">
+    <div className="min-h-screen bg-[#F0FBFA]">
       <Navbar />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
         {/* Explore Header */}
         <div className="text-center mb-6 sm:mb-8">
-          <span className="inline-block px-3 py-1 bg-orange-100 text-orange-800 text-xs font-bold rounded-full mb-2">
+          <span className="inline-block px-3 py-1 bg-[#E6F7F5] text-[#0D9488] border border-[#D5EAE7] text-xs font-bold rounded-full mb-2">
             Campus Food Explorer
           </span>
-          <h1 className="text-2xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
-            🔍 Discover & Compare Campus Bites
+          <h1 className="text-2xl sm:text-4xl font-black text-[#1F2937] tracking-tight">
+            Discover & Compare Campus Bites
           </h1>
-          <p className="text-sm sm:text-base text-gray-600 mt-1 max-w-xl mx-auto">
-            Search 340+ dishes across Bennett University outlets, compare prices, and view genuine ratings.
+          <p className="text-sm sm:text-base text-[#728783] mt-1 max-w-xl mx-auto">
+            Search verified dishes across Bennett University outlets, compare prices, and view genuine student ratings.
           </p>
         </div>
 

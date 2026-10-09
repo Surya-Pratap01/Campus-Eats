@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
+import { Store, Utensils, Flag, Plus } from 'lucide-react'
 
 export default async function AdminPage() {
   const supabase = await createClient()
@@ -33,7 +34,7 @@ export default async function AdminPage() {
   const reportedRatings = ratingsResult.data || []
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-50">
+    <div className="min-h-screen bg-[#F0FBFA]">
       <Navbar />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -41,17 +42,19 @@ export default async function AdminPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-md p-6">
+          <div className="bg-white rounded-xl shadow-xs border border-[#D5EAE7] p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-500 text-sm">Total Outlets</p>
                 <p className="text-3xl font-bold text-gray-900">{outlets.length}</p>
               </div>
-              <span className="text-4xl">🏪</span>
+              <div className="w-12 h-12 rounded-xl bg-[#E6F7F5] border border-[#D5EAE7] flex items-center justify-center text-[#0D9488]">
+                <Store className="w-6 h-6" />
+              </div>
             </div>
           </div>
           
-          <div className="bg-white rounded-xl shadow-md p-6">
+          <div className="bg-white rounded-xl shadow-xs border border-[#D5EAE7] p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-500 text-sm">Total Menu Items</p>
@@ -59,23 +62,27 @@ export default async function AdminPage() {
                   {outlets.reduce((sum, outlet) => sum + (outlet.menu_items?.length || 0), 0)}
                 </p>
               </div>
-              <span className="text-4xl">🍽️</span>
+              <div className="w-12 h-12 rounded-xl bg-[#E6F7F5] border border-[#D5EAE7] flex items-center justify-center text-[#0D9488]">
+                <Utensils className="w-6 h-6" />
+              </div>
             </div>
           </div>
           
-          <div className="bg-white rounded-xl shadow-md p-6">
+          <div className="bg-white rounded-xl shadow-xs border border-[#D5EAE7] p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-500 text-sm">Reported Comments</p>
                 <p className="text-3xl font-bold text-red-600">{reportedRatings.length}</p>
               </div>
-              <span className="text-4xl">🚩</span>
+              <div className="w-12 h-12 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center text-red-500">
+                <Flag className="w-6 h-6" />
+              </div>
             </div>
           </div>
         </div>
 
         {/* Manage Outlets */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200/80 p-5 sm:p-6 mb-6 sm:mb-8">
+        <div className="bg-white rounded-2xl shadow-xs border border-[#D5EAE7] p-5 sm:p-6 mb-6 sm:mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
             <div>
               <h2 className="text-xl font-bold text-gray-900">Manage Outlets</h2>
@@ -83,9 +90,9 @@ export default async function AdminPage() {
             </div>
             <Link
               href="/admin/outlets/new"
-              className="min-h-[44px] px-4 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl transition shadow-xs text-sm flex items-center justify-center active:scale-95"
+              className="min-h-[44px] px-4 py-2.5 bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold rounded-xl transition shadow-xs text-sm flex items-center justify-center active:scale-95 gap-1.5"
             >
-              + Add Outlet
+              <Plus className="w-4 h-4" /> Add Outlet
             </Link>
           </div>
 
@@ -94,13 +101,13 @@ export default async function AdminPage() {
           ) : (
             <div className="space-y-3 sm:space-y-4">
               {outlets.map((outlet) => (
-                <div key={outlet.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100 gap-3">
+                <div key={outlet.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-gray-50/80 rounded-xl border border-gray-100 gap-3">
                   <div className="flex items-center space-x-3.5">
                     {outlet.photo_url ? (
                       <img src={outlet.photo_url} alt={outlet.name} className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl object-cover shrink-0" />
                     ) : (
-                      <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-orange-400 to-yellow-400 rounded-xl flex items-center justify-center shrink-0">
-                        <span className="text-2xl">🍽️</span>
+                      <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-teal-50 to-emerald-100 border border-[#D5EAE7] rounded-xl flex items-center justify-center shrink-0">
+                        <Utensils className="w-6 h-6 text-teal-600/70" />
                       </div>
                     )}
                     <div className="min-w-0">

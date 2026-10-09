@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { Eye, EyeOff, Utensils, ArrowLeft } from 'lucide-react'
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState('')
@@ -56,16 +57,18 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-amber-50/40 to-yellow-50 px-4 py-8">
+    <div className="min-h-screen flex items-center justify-center bg-[#F0FBFA] px-4 py-8">
       <div className="max-w-md w-full">
-        <div className="bg-white rounded-3xl shadow-xl p-6 sm:p-8 border border-gray-100">
-          <div className="text-center mb-6">
-            <h1 className="text-3xl sm:text-4xl font-black text-orange-600 mb-1.5 flex items-center justify-center gap-2">
-              <span>🍽️</span>
-              <span>CampusEats</span>
+        <div className="bg-white rounded-3xl shadow-xl p-6 sm:p-8 border border-[#D5EAE7]">
+          <div className="flex flex-col items-center justify-center text-center mb-6">
+            <div className="w-12 h-12 rounded-2xl bg-[#E6F7F5] border border-[#D5EAE7] flex items-center justify-center text-[#0D9488] shadow-2xs mb-3">
+              <Utensils className="w-6 h-6" />
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-black text-[#0D9488] tracking-tight">
+              Campus Eats
             </h1>
-            <h2 className="text-lg font-bold text-gray-800">Set New Password</h2>
-            <p className="text-gray-600 text-xs sm:text-sm mt-1">
+            <h2 className="text-lg font-bold text-gray-800 mt-2">Set New Password</h2>
+            <p className="text-[#728783] text-xs sm:text-sm mt-1">
               Enter your new Campus Eats password below
             </p>
           </div>
@@ -84,15 +87,15 @@ export default function ResetPasswordPage() {
                   placeholder="At least 6 characters"
                   required
                   minLength={6}
-                  className="w-full px-4 py-3.5 pr-12 bg-gray-50 border border-gray-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition text-base text-gray-900 placeholder:text-gray-400 focus:text-gray-900"
+                  className="w-full px-4 py-3.5 pr-12 bg-white border border-[#D5EAE7] rounded-xl focus:ring-2 focus:ring-[#0D9488] focus:border-transparent outline-none transition text-base text-gray-900 placeholder:text-gray-400 focus:text-gray-900"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 w-11 h-full flex items-center justify-center text-gray-400 hover:text-gray-600 text-lg transition"
+                  className="absolute inset-y-0 right-0 w-11 h-full flex items-center justify-center text-gray-400 hover:text-gray-600 transition"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
-                  {showPassword ? '🙈' : '👁️'}
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
             </div>
@@ -110,15 +113,15 @@ export default function ResetPasswordPage() {
                   placeholder="Re-enter new password"
                   required
                   minLength={6}
-                  className="w-full px-4 py-3.5 pr-12 bg-gray-50 border border-gray-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition text-base text-gray-900 placeholder:text-gray-400 focus:text-gray-900"
+                  className="w-full px-4 py-3.5 pr-12 bg-white border border-[#D5EAE7] rounded-xl focus:ring-2 focus:ring-[#0D9488] focus:border-transparent outline-none transition text-base text-gray-900 placeholder:text-gray-400 focus:text-gray-900"
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute inset-y-0 right-0 w-11 h-full flex items-center justify-center text-gray-400 hover:text-gray-600 text-lg transition"
+                  className="absolute inset-y-0 right-0 w-11 h-full flex items-center justify-center text-gray-400 hover:text-gray-600 transition"
                   aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
                 >
-                  {showConfirmPassword ? '🙈' : '👁️'}
+                  {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
             </div>
@@ -138,7 +141,7 @@ export default function ResetPasswordPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full min-h-[48px] bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 px-4 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed text-base shadow-sm active:scale-98 flex items-center justify-center"
+              className="w-full min-h-[48px] bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold py-3.5 px-4 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed text-base shadow-xs active:scale-98 flex items-center justify-center"
             >
               {loading ? 'Updating Password...' : 'Update Password'}
             </button>
@@ -147,9 +150,9 @@ export default function ResetPasswordPage() {
           <div className="text-center mt-6">
             <Link
               href="/login"
-              className="min-h-[44px] px-4 inline-flex items-center text-sm text-orange-600 hover:text-orange-700 font-semibold"
+              className="min-h-[44px] px-4 inline-flex items-center text-sm text-[#0D9488] hover:text-[#0f766e] font-semibold gap-1.5"
             >
-              ← Back to Login
+              <ArrowLeft className="w-4 h-4" /> Back to Login
             </Link>
           </div>
         </div>

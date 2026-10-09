@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { Flag, Check } from 'lucide-react'
 
 interface ReportButtonProps {
   ratingId: string
@@ -49,7 +50,17 @@ export default function ReportButton({ ratingId, isReported, onReportChange }: R
             : 'text-red-500 hover:text-red-700 hover:bg-red-50'
         }`}
       >
-        {loading ? 'Reporting...' : isReported ? '✓ Reported' : '🚩 Report'}
+        {loading ? (
+          'Reporting...'
+        ) : isReported ? (
+          <span className="inline-flex items-center gap-1.5">
+            <Check className="w-3.5 h-3.5" /> Reported
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-1.5">
+            <Flag className="w-3.5 h-3.5" /> Report
+          </span>
+        )}
       </button>
       {message && (
         <p className="text-xs mt-1 text-gray-500">{message}</p>

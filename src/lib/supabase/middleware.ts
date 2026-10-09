@@ -35,8 +35,16 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Protected routes (exclude auth routes)
-  const publicRoutes = ['/login', '/auth/callback', '/auth/auth-code-error', '/auth/reset-password']
+  // Protected routes (exclude auth routes and public legal pages)
+  const publicRoutes = [
+    '/login',
+    '/auth/callback',
+    '/auth/auth-code-error',
+    '/auth/reset-password',
+    '/terms-and-conditions',
+    '/privacy-policy',
+    '/cookie-policy',
+  ]
   if (!user && !publicRoutes.some(route => request.nextUrl.pathname.startsWith(route))) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'

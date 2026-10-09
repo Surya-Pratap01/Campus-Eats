@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter, useParams } from 'next/navigation'
 import Navbar from '@/components/Navbar'
+import { ArrowLeft } from 'lucide-react'
 
 export default function EditOutletPage() {
   const [name, setName] = useState('')
@@ -113,30 +114,30 @@ export default function EditOutletPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-50">
+      <div className="min-h-screen bg-[#F0FBFA]">
         <Navbar />
         <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <p className="text-center">Loading...</p>
+          <p className="text-center text-[#728783]">Loading...</p>
         </main>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-50">
+    <div className="min-h-screen bg-[#F0FBFA]">
       <Navbar />
       
       <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
           <button
             onClick={() => router.push('/admin')}
-            className="text-orange-600 hover:text-orange-700 font-medium transition"
+            className="inline-flex items-center text-[#0D9488] hover:text-[#0f766e] font-semibold transition gap-1.5 min-h-[44px]"
           >
-            ← Back to Admin
+            <ArrowLeft className="w-4 h-4" /> Back to Admin
           </button>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-lg p-8">
+        <div className="bg-white rounded-2xl shadow-sm border border-[#D5EAE7] p-6 sm:p-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-6">Edit Outlet</h1>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -150,7 +151,7 @@ export default function EditOutletPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 border border-[#D5EAE7] rounded-xl focus:ring-2 focus:ring-[#0D9488] focus:border-transparent outline-none transition"
               />
             </div>
 
@@ -163,7 +164,7 @@ export default function EditOutletPage() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={3}
-                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition resize-none"
+                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 border border-[#D5EAE7] rounded-xl focus:ring-2 focus:ring-[#0D9488] focus:border-transparent outline-none transition resize-none"
               />
             </div>
 
@@ -177,7 +178,7 @@ export default function EditOutletPage() {
                 value={photoUrl}
                 onChange={(e) => setPhotoUrl(e.target.value)}
                 placeholder="https://example.com/photo.jpg"
-                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 border border-[#D5EAE7] rounded-xl focus:ring-2 focus:ring-[#0D9488] focus:border-transparent outline-none transition"
               />
             </div>
 
@@ -191,7 +192,7 @@ export default function EditOutletPage() {
                 accept="image/*"
                 onChange={handleImageUpload}
                 disabled={uploading}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 border border-[#D5EAE7] rounded-xl focus:ring-2 focus:ring-[#0D9488] focus:border-transparent outline-none transition"
               />
               {uploading && (
                 <p className="text-sm text-gray-500 mt-1">Uploading image...</p>
@@ -206,7 +207,7 @@ export default function EditOutletPage() {
                 <img
                   src={photoUrl}
                   alt="Outlet preview"
-                  className="w-full h-48 object-cover rounded-lg border border-gray-300"
+                  className="w-full h-48 object-cover rounded-xl border border-[#D5EAE7]"
                   onError={() => setError('Failed to load image preview')}
                 />
               </div>
@@ -222,12 +223,12 @@ export default function EditOutletPage() {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="e.g., Near Block A, Ground Floor"
-                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 border border-[#D5EAE7] rounded-xl focus:ring-2 focus:ring-[#0D9488] focus:border-transparent outline-none transition"
               />
             </div>
 
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
                 {error}
               </div>
             )}
@@ -236,7 +237,7 @@ export default function EditOutletPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="flex-1 bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-4 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 bg-[#0D9488] hover:bg-[#0F766E] text-white font-semibold py-3 px-4 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed shadow-xs active:scale-98"
               >
                 {saving ? 'Saving...' : 'Save Changes'}
               </button>
@@ -244,7 +245,7 @@ export default function EditOutletPage() {
               <button
                 type="button"
                 onClick={handleDelete}
-                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-4 rounded-lg transition"
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-4 rounded-xl transition active:scale-98"
               >
                 Delete Outlet
               </button>
@@ -252,7 +253,7 @@ export default function EditOutletPage() {
               <button
                 type="button"
                 onClick={() => router.push('/admin')}
-                className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 px-4 rounded-lg transition"
+                className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-xl transition active:scale-98"
               >
                 Cancel
               </button>

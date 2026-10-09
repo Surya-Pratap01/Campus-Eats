@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter, useParams } from 'next/navigation'
 import Navbar from '@/components/Navbar'
+import { ArrowLeft } from 'lucide-react'
 
 export default function NewMenuItemPage() {
   const [name, setName] = useState('')
@@ -41,20 +42,20 @@ export default function NewMenuItemPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-50">
+    <div className="min-h-screen bg-[#F0FBFA]">
       <Navbar />
       
       <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
           <button
             onClick={() => router.push(`/admin/outlets/${params.id}/menu`)}
-            className="text-orange-600 hover:text-orange-700 font-medium transition"
+            className="inline-flex items-center text-[#0D9488] hover:text-[#0f766e] font-semibold transition gap-1.5 min-h-[44px]"
           >
-            ← Back to Menu
+            <ArrowLeft className="w-4 h-4" /> Back to Menu
           </button>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-lg p-8">
+        <div className="bg-white rounded-2xl shadow-sm border border-[#D5EAE7] p-6 sm:p-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-6">Add New Menu Item</h1>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -68,7 +69,7 @@ export default function NewMenuItemPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 focus:text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 focus:text-gray-900 border border-[#D5EAE7] rounded-xl focus:ring-2 focus:ring-[#0D9488] focus:border-transparent outline-none transition"
               />
             </div>
 
@@ -81,17 +82,17 @@ export default function NewMenuItemPage() {
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 focus:text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 focus:text-gray-900 border border-[#D5EAE7] rounded-xl focus:ring-2 focus:ring-[#0D9488] focus:border-transparent outline-none transition"
               >
                 <option value="">Select a category</option>
-                <option value="Beverages">🥤 Beverages</option>
-                <option value="Snacks">🍿 Snacks</option>
-                <option value="Meals">🍛 Meals</option>
-                <option value="Desserts">🍰 Desserts</option>
-                <option value="Fast Food">🍔 Fast Food</option>
-                <option value="Chinese">🥡 Chinese</option>
-                <option value="South Indian">🥘 South Indian</option>
-                <option value="North Indian">🍲 North Indian</option>
+                <option value="Beverages">Beverages</option>
+                <option value="Snacks">Snacks</option>
+                <option value="Meals">Meals</option>
+                <option value="Desserts">Desserts</option>
+                <option value="Fast Food">Fast Food</option>
+                <option value="Chinese">Chinese</option>
+                <option value="South Indian">South Indian</option>
+                <option value="North Indian">North Indian</option>
               </select>
             </div>
 
@@ -107,7 +108,7 @@ export default function NewMenuItemPage() {
                 step="0.01"
                 min="0"
                 placeholder="e.g., 50"
-                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 focus:text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 focus:text-gray-900 border border-[#D5EAE7] rounded-xl focus:ring-2 focus:ring-[#0D9488] focus:border-transparent outline-none transition"
               />
             </div>
 
@@ -121,12 +122,12 @@ export default function NewMenuItemPage() {
                 value={photoUrl}
                 onChange={(e) => setPhotoUrl(e.target.value)}
                 placeholder="https://example.com/photo.jpg"
-                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 focus:text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-400 focus:text-gray-900 border border-[#D5EAE7] rounded-xl focus:ring-2 focus:ring-[#0D9488] focus:border-transparent outline-none transition"
               />
             </div>
 
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
                 {error}
               </div>
             )}
@@ -135,7 +136,7 @@ export default function NewMenuItemPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-4 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 bg-[#0D9488] hover:bg-[#0F766E] text-white font-semibold py-3 px-4 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed shadow-xs active:scale-98"
               >
                 {loading ? 'Creating...' : 'Create Menu Item'}
               </button>
@@ -143,7 +144,7 @@ export default function NewMenuItemPage() {
               <button
                 type="button"
                 onClick={() => router.push(`/admin/outlets/${params.id}/menu`)}
-                className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 px-4 rounded-lg transition"
+                className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-xl transition active:scale-98"
               >
                 Cancel
               </button>

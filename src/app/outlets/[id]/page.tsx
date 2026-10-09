@@ -2,6 +2,9 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import { notFound } from 'next/navigation'
+import { CategoryIcon } from '@/lib/categories'
+import { getOutletImageStyle } from '@/lib/outlet-image-config'
+import { Utensils, MapPin, ClipboardList, Star, ArrowRight, ArrowLeft } from 'lucide-react'
 
 async function getOutlet(id: string) {
   const supabase = await createClient()
@@ -64,20 +67,6 @@ function calculateAverageRating(ratings: RatingDimension[]) {
   return (total / ratings.length).toFixed(1)
 }
 
-function getCategoryEmoji(category?: string) {
-  if (!category) return '🍽️'
-  const categoryMap: { [key: string]: string } = {
-    'Beverages': '🥤',
-    'Snacks': '🍿',
-    'Meals': '🍛',
-    'Desserts': '🍰',
-    'Fast Food': '🍔',
-    'Chinese': '🥡',
-    'South Indian': '🥘',
-    'North Indian': '🍲',
-  }
-  return categoryMap[category] || '🍽️'
-}
 
 export default async function OutletPage({
   params,
@@ -104,29 +93,30 @@ export default async function OutletPage({
   }, {})
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50/40 to-yellow-50">
+    <div className="min-h-screen bg-[#F0FBFA]">
       <Navbar />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8">
         <Link
           href="/"
-          className="inline-flex items-center min-h-[44px] px-3.5 py-2 rounded-xl bg-white shadow-2xs border border-gray-200 text-orange-600 hover:text-orange-700 font-semibold text-sm mb-4 sm:mb-6 transition active:scale-95"
+          className="inline-flex items-center min-h-[44px] px-3.5 py-2 rounded-xl bg-white shadow-2xs border border-[#D5EAE7] text-[#0D9488] hover:text-[#0f766e] font-semibold text-sm mb-4 sm:mb-6 transition active:scale-95 gap-1.5"
         >
-          ← Back to All Outlets
+          <ArrowLeft className="w-4 h-4" /> Back to All Outlets
         </Link>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200/80 overflow-hidden mb-6 sm:mb-8">
+        <div className="bg-white rounded-2xl shadow-sm border border-[#D5EAE7] overflow-hidden mb-6 sm:mb-8">
           {outlet.photo_url ? (
             <div className="h-48 sm:h-64 overflow-hidden relative">
               <img
                 src={outlet.photo_url}
                 alt={`${outlet.name} dining outlet storefront at Bennett University`}
                 className="w-full h-full object-cover"
+                style={getOutletImageStyle(outlet, 'detail')}
               />
             </div>
           ) : (
-            <div className="h-48 sm:h-64 bg-gradient-to-br from-orange-400 to-yellow-400 flex items-center justify-center">
-              <span className="text-7xl sm:text-8xl" role="img" aria-label="Campus dining icon">🍽️</span>
+            <div className="h-48 sm:h-64 bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center">
+              <Utensils className="w-20 h-20 text-white/80" aria-label="Campus dining icon" />
             </div>
           )}
           
@@ -142,8 +132,8 @@ export default async function OutletPage({
             )}
             
             {outlet.location && (
-              <p className="text-gray-500 text-xs sm:text-sm flex items-center">
-                <span className="mr-1">📍</span>
+              <p className="text-gray-500 text-xs sm:text-sm flex items-center gap-1.5">
+                <MapPin className="w-4 h-4 text-gray-400 shrink-0" />
                 <span>{outlet.location}</span>
               </p>
             )}
@@ -151,8 +141,8 @@ export default async function OutletPage({
         </div>
 
         {menuItems.length === 0 ? (
-          <div className="text-center py-12 sm:py-16 bg-white rounded-2xl shadow-xs border border-gray-200 p-6">
-            <div className="text-5xl mb-3">📋</div>
+          <div className="text-center py-12 sm:py-16 bg-white rounded-2xl shadow-xs border border-[#D5EAE7] p-6">
+            <ClipboardList className="w-12 h-12 text-[#0D9488]/40 mx-auto mb-3" />
             <h2 className="text-xl font-bold text-gray-800 mb-1">Menu information coming soon</h2>
             <p className="text-gray-500 text-sm max-w-md mx-auto">
               We are working on bringing the verified, official menu for this outlet.
@@ -163,9 +153,9 @@ export default async function OutletPage({
             {Object.entries(groupedItems).map(([category, items]) => (
               <div key={category}>
                 <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4 flex items-center">
-                  <span className="mr-2">{getCategoryEmoji(category)}</span>
+                  <CategoryIcon category={category} className="w-5 h-5 mr-2 text-[#0D9488]" />
                   <span>{category}</span>
-                  <span className="ml-2 text-xs font-semibold px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full">
+                  <span className="ml-2 text-xs font-semibold px-2 py-0.5 bg-[#E6F7F5] text-[#0D9488] rounded-full">
                     {items.length}
                   </span>
                 </h2>
@@ -180,7 +170,7 @@ export default async function OutletPage({
                         href={`/items/${item.id}`}
                         className="group block active:scale-98 transition-transform"
                       >
-                        <div className="bg-white rounded-2xl shadow-xs border border-gray-200/80 overflow-hidden hover:shadow-md transition-shadow h-full flex flex-col justify-between">
+                        <div className="bg-white rounded-2xl shadow-xs border border-[#D5EAE7] overflow-hidden hover:shadow-md transition-shadow h-full flex flex-col justify-between">
                           <div>
                             {item.photo_url ? (
                               <div className="h-36 sm:h-40 overflow-hidden">
@@ -191,18 +181,18 @@ export default async function OutletPage({
                                 />
                               </div>
                             ) : (
-                              <div className="h-28 sm:h-36 bg-gradient-to-br from-orange-200 via-amber-100 to-yellow-200 flex items-center justify-center">
-                                <span className="text-3xl sm:text-4xl">{getCategoryEmoji(item.category)}</span>
+                              <div className="h-28 sm:h-36 bg-gradient-to-br from-teal-50 to-emerald-100 flex items-center justify-center">
+                                <CategoryIcon category={item.category} className="w-10 h-10 text-teal-600/70" />
                               </div>
                             )}
                             
                             <div className="p-4">
-                              <h3 className="font-bold text-gray-900 text-base mb-1 group-hover:text-orange-600 transition">
+                              <h3 className="font-bold text-gray-900 text-base mb-1 group-hover:text-[#0D9488] transition">
                                 {item.name}
                               </h3>
                               
                               {item.price && (
-                                <p className="text-orange-600 font-bold text-base mb-2">₹{item.price}</p>
+                                <p className="text-[#0D9488] font-bold text-base mb-2">₹{item.price}</p>
                               )}
                             </div>
                           </div>
@@ -211,7 +201,7 @@ export default async function OutletPage({
                             <div className="flex items-center space-x-1">
                               {avgRating ? (
                                 <>
-                                  <span className="text-yellow-500 text-sm">⭐</span>
+                                  <Star className="w-4 h-4 text-amber-500 fill-amber-500 shrink-0" />
                                   <span className="font-bold text-gray-900 text-sm">{avgRating}</span>
                                   <span className="text-gray-400 text-xs">({item.ratings?.length || 0})</span>
                                 </>
@@ -220,8 +210,8 @@ export default async function OutletPage({
                               )}
                             </div>
                             
-                            <span className="min-h-[44px] px-3 flex items-center text-orange-600 font-bold text-xs group-hover:text-orange-700 transition">
-                              Details & Rate →
+                            <span className="min-h-[44px] px-3 flex items-center text-[#0D9488] font-bold text-xs group-hover:text-[#0f766e] transition gap-1">
+                              Details & Rate <ArrowRight className="w-3.5 h-3.5" />
                             </span>
                           </div>
                         </div>

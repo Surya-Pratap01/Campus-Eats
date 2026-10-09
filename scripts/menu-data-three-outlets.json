@@ -1,0 +1,962 @@
+{
+  "quench": [
+    {
+      "name": "Retro Aloo Tikki Burger",
+      "category": "BURGERS",
+      "price": 55.0
+    },
+    {
+      "name": "Spicy Chilli Lava Burger",
+      "category": "BURGERS",
+      "price": 65.0
+    },
+    {
+      "name": "Schezwan Burger",
+      "category": "BURGERS",
+      "price": 65.0
+    },
+    {
+      "name": "Classic Veggie Burger",
+      "category": "BURGERS",
+      "price": 65.0
+    },
+    {
+      "name": "Tandoori Crispy Burger",
+      "category": "BURGERS",
+      "price": 70.0
+    },
+    {
+      "name": "Crunchy Paneer Burger",
+      "category": "BURGERS",
+      "price": 85.0
+    },
+    {
+      "name": "Paneer Makhani Burger",
+      "category": "BURGERS",
+      "price": 85.0
+    },
+    {
+      "name": "Maharaja Burger",
+      "category": "BURGERS",
+      "price": 120.0
+    },
+    {
+      "name": "Add On Cheese Single",
+      "category": "BURGERS",
+      "price": 15.0
+    },
+    {
+      "name": "Classic Fries with Mayo",
+      "category": "FRIES",
+      "price": 60.0
+    },
+    {
+      "name": "Peri Peri Fries with Mayo",
+      "category": "FRIES",
+      "price": 70.0
+    },
+    {
+      "name": "Say Cheese",
+      "category": "FRIES",
+      "price": 75.0
+    },
+    {
+      "name": "Fire n Cheese",
+      "category": "FRIES",
+      "price": 80.0
+    },
+    {
+      "name": "Mexican Salsa",
+      "category": "FRIES",
+      "price": 85.0
+    },
+    {
+      "name": "Paneer Makhani Fries",
+      "category": "FRIES",
+      "price": 85.0
+    },
+    {
+      "name": "Arrabbiata",
+      "category": "PASTAS",
+      "price": 90.0
+    },
+    {
+      "name": "Alfredo (White)",
+      "category": "PASTAS",
+      "price": 90.0
+    },
+    {
+      "name": "Pink Sauce Pasta",
+      "category": "PASTAS",
+      "price": 90.0
+    },
+    {
+      "name": "Chilli Cheese Garlic Bread",
+      "category": "SIDES",
+      "price": 110.0
+    },
+    {
+      "name": "Power Packed Tangy Salad",
+      "category": "SIDES",
+      "price": 100.0
+    },
+    {
+      "name": "Aloo Wrap",
+      "category": "SIGNATURE WRAPS",
+      "price": 70.0
+    },
+    {
+      "name": "Tandoori Veggie Wrap",
+      "category": "SIGNATURE WRAPS",
+      "price": 80.0
+    },
+    {
+      "name": "Veg Paneer Wrap",
+      "category": "SIGNATURE WRAPS",
+      "price": 90.0
+    },
+    {
+      "name": "Mexican Salsa Wrap",
+      "category": "SIGNATURE WRAPS",
+      "price": 90.0
+    },
+    {
+      "name": "Veg Masala Grilled",
+      "category": "SANDWICHES",
+      "price": 65.0
+    },
+    {
+      "name": "Creamy Cheese Corn",
+      "category": "SANDWICHES",
+      "price": 75.0
+    },
+    {
+      "name": "Spicy Paneer & Jalapeno",
+      "category": "SANDWICHES",
+      "price": 90.0
+    },
+    {
+      "name": "Paneer Korma",
+      "category": "SANDWICHES",
+      "price": 90.0
+    },
+    {
+      "name": "Bombay Street Style",
+      "category": "SANDWICHES",
+      "price": 90.0
+    },
+    {
+      "name": "Banana Shake",
+      "category": "THICK SHAKES",
+      "price": 60.0
+    },
+    {
+      "name": "Mango Shake",
+      "category": "THICK SHAKES",
+      "price": 70.0
+    },
+    {
+      "name": "Chocolate Shake",
+      "category": "THICK SHAKES",
+      "price": 70.0
+    },
+    {
+      "name": "Cold Coffee Shake",
+      "category": "THICK SHAKES",
+      "price": 70.0
+    },
+    {
+      "name": "Bubble Gum Shake",
+      "category": "THICK SHAKES",
+      "price": 70.0
+    },
+    {
+      "name": "Choco Oreo Shake",
+      "category": "THICK SHAKES",
+      "price": 85.0
+    },
+    {
+      "name": "Hazelnut Cold Coffee Shake",
+      "category": "THICK SHAKES",
+      "price": 85.0
+    },
+    {
+      "name": "Irish Cold Coffee Shake",
+      "category": "THICK SHAKES",
+      "price": 85.0
+    },
+    {
+      "name": "Crunchy Caramal Shake",
+      "category": "THICK SHAKES",
+      "price": 85.0
+    },
+    {
+      "name": "Veg Delight",
+      "category": "SUBS",
+      "price": 90.0
+    },
+    {
+      "name": "Corn n Peas Sub",
+      "category": "SUBS",
+      "price": 90.0
+    },
+    {
+      "name": "Hara Bhara Kabab",
+      "category": "SUBS",
+      "price": 110.0
+    },
+    {
+      "name": "Paneer Tikka",
+      "category": "SUBS",
+      "price": 110.0
+    },
+    {
+      "name": "Choco Waffle",
+      "category": "WAFFLES",
+      "price": 70.0
+    },
+    {
+      "name": "Strawberry Waffle",
+      "category": "WAFFLES",
+      "price": 70.0
+    },
+    {
+      "name": "Maple Waffle",
+      "category": "WAFFLES",
+      "price": 80.0
+    },
+    {
+      "name": "Choco Oreo Waffle",
+      "category": "WAFFLES",
+      "price": 90.0
+    },
+    {
+      "name": "Nutella Waffle",
+      "category": "WAFFLES",
+      "price": 95.0
+    },
+    {
+      "name": "Blue Curacao",
+      "category": "MOCKTAILS",
+      "price": 70.0
+    },
+    {
+      "name": "Spicy Mango",
+      "category": "MOCKTAILS",
+      "price": 70.0
+    },
+    {
+      "name": "Mint Mojito",
+      "category": "MOCKTAILS",
+      "price": 70.0
+    },
+    {
+      "name": "Green Apple Mojito",
+      "category": "MOCKTAILS",
+      "price": 70.0
+    },
+    {
+      "name": "Paan Mojito",
+      "category": "MOCKTAILS",
+      "price": 70.0
+    },
+    {
+      "name": "Bloody Orange",
+      "category": "MOCKTAILS",
+      "price": 70.0
+    },
+    {
+      "name": "Water Melon",
+      "category": "JUICES",
+      "price": 60.0
+    },
+    {
+      "name": "Mosumbi",
+      "category": "JUICES",
+      "price": 70.0
+    },
+    {
+      "name": "Pineapple",
+      "category": "JUICES",
+      "price": 70.0
+    },
+    {
+      "name": "Apple",
+      "category": "JUICES",
+      "price": 85.0
+    },
+    {
+      "name": "Pomegranate",
+      "category": "JUICES",
+      "price": 90.0
+    },
+    {
+      "name": "Cocktail",
+      "category": "JUICES",
+      "price": 80.0
+    }
+  ],
+  "southern_stories": [
+    {
+      "name": "Plain Dosa",
+      "category": "DOSA",
+      "price": 70.0
+    },
+    {
+      "name": "Masala Dosa",
+      "category": "DOSA",
+      "price": 80.0
+    },
+    {
+      "name": "Rawa Dosa",
+      "category": "DOSA",
+      "price": 90.0
+    },
+    {
+      "name": "Rawa Onion / Masala Dosa",
+      "category": "DOSA",
+      "price": 100.0
+    },
+    {
+      "name": "Podi Butter Masala Dosa",
+      "category": "DOSA",
+      "price": 100.0
+    },
+    {
+      "name": "Rawa Onion Masala Dosa",
+      "category": "DOSA",
+      "price": 110.0
+    },
+    {
+      "name": "Mysore Masala Dosa",
+      "category": "DOSA",
+      "price": 110.0
+    },
+    {
+      "name": "Ghee Roast Masala Dosa",
+      "category": "DOSA",
+      "price": 120.0
+    },
+    {
+      "name": "Cheese Dosa / Paneer Dosa",
+      "category": "DOSA",
+      "price": 120.0
+    },
+    {
+      "name": "Cheese Masala Dosa",
+      "category": "DOSA",
+      "price": 130.0
+    },
+    {
+      "name": "Rawa Paneer Dosa",
+      "category": "DOSA",
+      "price": 140.0
+    },
+    {
+      "name": "Paper Masala Dosa",
+      "category": "DOSA",
+      "price": 150.0
+    },
+    {
+      "name": "Onion Uttapam",
+      "category": "UTTAPAM",
+      "price": 80.0
+    },
+    {
+      "name": "Tomato Onion Uttapam",
+      "category": "UTTAPAM",
+      "price": 90.0
+    },
+    {
+      "name": "Veg Uttapam",
+      "category": "UTTAPAM",
+      "price": 100.0
+    },
+    {
+      "name": "Paneer Uttapam",
+      "category": "UTTAPAM",
+      "price": 120.0
+    },
+    {
+      "name": "Mixed Uttapam",
+      "category": "UTTAPAM",
+      "price": 130.0
+    },
+    {
+      "name": "Aloo Payaaz Paratha",
+      "category": "BREADS",
+      "price": 60.0,
+      "large_price": 110.0
+    },
+    {
+      "name": "Mixed Veg Paratha",
+      "category": "BREADS",
+      "price": 65.0,
+      "large_price": 120.0
+    },
+    {
+      "name": "Gobhi Paratha",
+      "category": "BREADS",
+      "price": 65.0,
+      "large_price": 120.0
+    },
+    {
+      "name": "Paneer Paratha",
+      "category": "BREADS",
+      "price": 75.0,
+      "large_price": 140.0
+    },
+    {
+      "name": "Paratha with Paneer Korma",
+      "category": "BREADS",
+      "price": 130.0
+    },
+    {
+      "name": "Idli Sambhar",
+      "category": "SIDES / SNACKS",
+      "price": 70.0
+    },
+    {
+      "name": "Vada Sambhar",
+      "category": "SIDES / SNACKS",
+      "price": 75.0
+    },
+    {
+      "name": "Idli / Vada Combo",
+      "category": "SIDES / SNACKS",
+      "price": 75.0
+    },
+    {
+      "name": "Pav Bhaji",
+      "category": "SIDES / SNACKS",
+      "price": 80.0
+    },
+    {
+      "name": "Channa Kulcha",
+      "category": "SIDES / SNACKS",
+      "price": 100.0
+    },
+    {
+      "name": "Rajma Rice Bowl",
+      "category": "SIDES / SNACKS",
+      "price": 120.0
+    },
+    {
+      "name": "Chole Rice Bowl",
+      "category": "SIDES / SNACKS",
+      "price": 120.0
+    },
+    {
+      "name": "Chole Bhatura",
+      "category": "SIDES / SNACKS",
+      "price": 130.0
+    },
+    {
+      "name": "Filter Coffee",
+      "category": "BEVERAGES",
+      "price": 40.0
+    },
+    {
+      "name": "Classic Cold Coffee",
+      "category": "BEVERAGES",
+      "price": 70.0
+    },
+    {
+      "name": "Hazelnut / Irish / Caramel Cold Coffee",
+      "category": "BEVERAGES",
+      "price": 85.0
+    },
+    {
+      "name": "KitKat / Oreo Coffee Shake",
+      "category": "BEVERAGES",
+      "price": 85.0
+    },
+    {
+      "name": "Lassi",
+      "category": "BEVERAGES",
+      "price": 65.0
+    },
+    {
+      "name": "Softy Cone",
+      "category": "BEVERAGES",
+      "price": 30.0
+    }
+  ],
+  "monginis": [
+    {
+      "name": "Beaty Cake",
+      "category": "Cake (Small)",
+      "price": 300.0
+    },
+    {
+      "name": "Beaty Cake Mouse",
+      "category": "Cake (Small)",
+      "price": 300.0
+    },
+    {
+      "name": "Panda",
+      "category": "Cake (Small)",
+      "price": 350.0
+    },
+    {
+      "name": "Pineapple",
+      "category": "Cake (Small)",
+      "price": 375.0
+    },
+    {
+      "name": "Butter Scotch",
+      "category": "Cake (Small)",
+      "price": 375.0
+    },
+    {
+      "name": "Black Forest",
+      "category": "Cake (Small)",
+      "price": 400.0
+    },
+    {
+      "name": "Rainbow",
+      "category": "Cake (Small)",
+      "price": 400.0
+    },
+    {
+      "name": "Icy Spicy",
+      "category": "Cake (Small)",
+      "price": 400.0
+    },
+    {
+      "name": "Alpine Choco",
+      "category": "Cake (Small)",
+      "price": 425.0
+    },
+    {
+      "name": "Alpine Choco Hear",
+      "category": "Cake (Small)",
+      "price": 425.0
+    },
+    {
+      "name": "Choco Bite",
+      "category": "Cake (Small)",
+      "price": 425.0
+    },
+    {
+      "name": "Choco Feast",
+      "category": "Cake (Small)",
+      "price": 425.0
+    },
+    {
+      "name": "Choco Overload",
+      "category": "Cake (Small)",
+      "price": 425.0
+    },
+    {
+      "name": "Devils Delite",
+      "category": "Cake (Small)",
+      "price": 425.0
+    },
+    {
+      "name": "Dutch Brownie",
+      "category": "Cake (Small)",
+      "price": 425.0
+    },
+    {
+      "name": "Dutch Choco",
+      "category": "Cake (Small)",
+      "price": 425.0
+    },
+    {
+      "name": "Dutch Choco Heart",
+      "category": "Cake (Small)",
+      "price": 425.0
+    },
+    {
+      "name": "Rasmalai",
+      "category": "Cake (Small)",
+      "price": 475.0
+    },
+    {
+      "name": "Red Velvet Heart",
+      "category": "Cake (Small)",
+      "price": 475.0
+    },
+    {
+      "name": "Red Velvet",
+      "category": "Cake (Small)",
+      "price": 475.0
+    },
+    {
+      "name": "Four Season",
+      "category": "Cake (Small)",
+      "price": 475.0
+    },
+    {
+      "name": "Nutella Cake",
+      "category": "Cake (Small)",
+      "price": 500.0
+    },
+    {
+      "name": "Choco Ice",
+      "category": "Cake (Small)",
+      "price": 500.0
+    },
+    {
+      "name": "Choco Almond Heart",
+      "category": "Cake (Small)",
+      "price": 500.0
+    },
+    {
+      "name": "Choco Pear Heart",
+      "category": "Cake (Small)",
+      "price": 500.0
+    },
+    {
+      "name": "Choco Red Heart",
+      "category": "Cake (Small)",
+      "price": 500.0
+    },
+    {
+      "name": "Choco Stick",
+      "category": "Cake (Small)",
+      "price": 500.0
+    },
+    {
+      "name": "Alpine Choco Fantasy Round",
+      "category": "Cake (Small)",
+      "price": 500.0
+    },
+    {
+      "name": "Duet Black Forest Heart",
+      "category": "Cake (Small)",
+      "price": 500.0
+    },
+    {
+      "name": "Butter Scotch Crunchy Round",
+      "category": "Cake (Small)",
+      "price": 500.0
+    },
+    {
+      "name": "Shahi Rasmalai Round",
+      "category": "Cake (Small)",
+      "price": 500.0
+    },
+    {
+      "name": "Multi Choco Bite Round",
+      "category": "Cake (Small)",
+      "price": 500.0
+    },
+    {
+      "name": "Choco Stick Round",
+      "category": "Cake (Small)",
+      "price": 500.0
+    },
+    {
+      "name": "Rich Choco Mousse Heart",
+      "category": "Cake (Small)",
+      "price": 500.0
+    },
+    {
+      "name": "Dutch Choco Mist Round",
+      "category": "Cake (Small)",
+      "price": 500.0
+    },
+    {
+      "name": "Super Choco Round",
+      "category": "Cake (Small)",
+      "price": 500.0
+    },
+    {
+      "name": "Butter Scotch",
+      "category": "Pastries (Fresh Cream)",
+      "price": 55.0
+    },
+    {
+      "name": "Pineapple",
+      "category": "Pastries (Fresh Cream)",
+      "price": 65.0
+    },
+    {
+      "name": "Black Forest",
+      "category": "Pastries (Fresh Cream)",
+      "price": 70.0
+    },
+    {
+      "name": "Tiramisu",
+      "category": "Pastries (Fresh Cream)",
+      "price": 80.0
+    },
+    {
+      "name": "Rainbow",
+      "category": "Pastries (Fresh Cream)",
+      "price": 80.0
+    },
+    {
+      "name": "Fresh Fruit",
+      "category": "Pastries (Fresh Cream)",
+      "price": 85.0
+    },
+    {
+      "name": "Zebra Torte",
+      "category": "Pastries (Fresh Cream)",
+      "price": 85.0
+    },
+    {
+      "name": "Red Velvet Cheese",
+      "category": "Pastries (Fresh Cream)",
+      "price": 85.0
+    },
+    {
+      "name": "Blueberry Cheese Cake",
+      "category": "Pastries (Fresh Cream)",
+      "price": 120.0
+    },
+    {
+      "name": "Bisko Cheese Cake",
+      "category": "Pastries (Fresh Cream)",
+      "price": 120.0
+    },
+    {
+      "name": "Choco Bomb",
+      "category": "Pastries (Chocolate)",
+      "price": 48.0
+    },
+    {
+      "name": "Devils Delite",
+      "category": "Pastries (Chocolate)",
+      "price": 55.0
+    },
+    {
+      "name": "Irish Coffee",
+      "category": "Pastries (Chocolate)",
+      "price": 60.0
+    },
+    {
+      "name": "Ivory",
+      "category": "Pastries (Chocolate)",
+      "price": 65.0
+    },
+    {
+      "name": "Swiss Miss",
+      "category": "Pastries (Chocolate)",
+      "price": 65.0
+    },
+    {
+      "name": "Chocolate Mousse Cup",
+      "category": "Pastries (Chocolate)",
+      "price": 70.0
+    },
+    {
+      "name": "Choco Gooey Brownie",
+      "category": "Pastries (Chocolate)",
+      "price": 75.0
+    },
+    {
+      "name": "Walnut Brownie",
+      "category": "Pastries (Chocolate)",
+      "price": 75.0
+    },
+    {
+      "name": "Brownie Square",
+      "category": "Pastries (Chocolate)",
+      "price": 75.0
+    },
+    {
+      "name": "Dutch Truffle",
+      "category": "Pastries (Chocolate)",
+      "price": 80.0
+    },
+    {
+      "name": "Almond Dutch",
+      "category": "Pastries (Chocolate)",
+      "price": 80.0
+    },
+    {
+      "name": "Royal Choco",
+      "category": "Pastries (Chocolate)",
+      "price": 80.0
+    },
+    {
+      "name": "Choco Lava",
+      "category": "Pastries (Chocolate)",
+      "price": 85.0
+    },
+    {
+      "name": "Hazelnut Dutch Choco Mud",
+      "category": "Pastries (Chocolate)",
+      "price": 100.0
+    },
+    {
+      "name": "Choco Donut",
+      "category": "Dessert",
+      "price": 50.0
+    },
+    {
+      "name": "Choco Drizzle Donut",
+      "category": "Dessert",
+      "price": 55.0
+    },
+    {
+      "name": "Chocotello Donut",
+      "category": "Dessert",
+      "price": 55.0
+    },
+    {
+      "name": "Jemmy Land Donut",
+      "category": "Dessert",
+      "price": 55.0
+    },
+    {
+      "name": "Choco Mousse Jar",
+      "category": "Dessert",
+      "price": 90.0
+    },
+    {
+      "name": "Red Velvet Jar",
+      "category": "Dessert",
+      "price": 110.0
+    },
+    {
+      "name": "Samosa",
+      "category": "Savouries (Veg)",
+      "price": 20.0
+    },
+    {
+      "name": "Chatpata Aloo Puff",
+      "category": "Savouries (Veg)",
+      "price": 25.0
+    },
+    {
+      "name": "Aloo Patty Puff",
+      "category": "Savouries (Veg)",
+      "price": 25.0
+    },
+    {
+      "name": "Vada Paav",
+      "category": "Savouries (Veg)",
+      "price": 25.0
+    },
+    {
+      "name": "Mushroom Puff",
+      "category": "Savouries (Veg)",
+      "price": 30.0
+    },
+    {
+      "name": "Cheese Corn Puff",
+      "category": "Savouries (Veg)",
+      "price": 30.0
+    },
+    {
+      "name": "Veg Patties",
+      "category": "Savouries (Veg)",
+      "price": 30.0
+    },
+    {
+      "name": "Paneer Tart",
+      "category": "Savouries (Veg)",
+      "price": 35.0
+    },
+    {
+      "name": "Paneer Puff",
+      "category": "Savouries (Veg)",
+      "price": 35.0
+    },
+    {
+      "name": "Veg-65 Puff",
+      "category": "Savouries (Veg)",
+      "price": 35.0
+    },
+    {
+      "name": "Schezwan Noodle Puff",
+      "category": "Savouries (Veg)",
+      "price": 35.0
+    },
+    {
+      "name": "Cheese Chutney Sandwich",
+      "category": "Savouries (Veg)",
+      "price": 42.0
+    },
+    {
+      "name": "Paneer Kulcha",
+      "category": "Savouries (Veg)",
+      "price": 45.0
+    },
+    {
+      "name": "Bun Maska",
+      "category": "Savouries (Veg)",
+      "price": 45.0
+    },
+    {
+      "name": "Cheese Chutney Sandwich",
+      "category": "Savouries (Veg)",
+      "price": 45.0
+    },
+    {
+      "name": "Paneer Tikka Roll",
+      "category": "Savouries (Veg)",
+      "price": 50.0
+    },
+    {
+      "name": "Veg Sandwich",
+      "category": "Savouries (Veg)",
+      "price": 50.0
+    },
+    {
+      "name": "Cheese Corn Sandwich",
+      "category": "Savouries (Veg)",
+      "price": 50.0
+    },
+    {
+      "name": "Veg Burger",
+      "category": "Savouries (Veg)",
+      "price": 55.0
+    },
+    {
+      "name": "Veg Pizza",
+      "category": "Savouries (Veg)",
+      "price": 55.0
+    },
+    {
+      "name": "Chicken Tart",
+      "category": "Savouries (Non Veg)",
+      "price": 40.0
+    },
+    {
+      "name": "Chicken Internet",
+      "category": "Savouries (Non Veg)",
+      "price": 45.0
+    },
+    {
+      "name": "Spicy Chicken puff",
+      "category": "Savouries (Non Veg)",
+      "price": 35.0
+    },
+    {
+      "name": "Afgani Chicken puff",
+      "category": "Savouries (Non Veg)",
+      "price": 40.0
+    },
+    {
+      "name": "Chicken Mayonnaise Sanwich",
+      "category": "Savouries (Non Veg)",
+      "price": 50.0
+    },
+    {
+      "name": "Egg puff",
+      "category": "Savouries (Non Veg)",
+      "price": 35.0
+    },
+    {
+      "name": "Chicken Burger",
+      "category": "Savouries (Non Veg)",
+      "price": 60.0
+    },
+    {
+      "name": "Chicken Pizza",
+      "category": "Savouries (Non Veg)",
+      "price": 60.0
+    },
+    {
+      "name": "Chicken Tikka Roll",
+      "category": "Savouries (Non Veg)",
+      "price": 55.0
+    }
+  ]
+}

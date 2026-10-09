@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { Eye, EyeOff, Utensils, ArrowLeft } from 'lucide-react'
 
 export default function LoginPage() {
   const [mode, setMode] = useState<'login' | 'signup' | 'forgot_password'>('login')
@@ -146,27 +147,32 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-amber-50/40 to-yellow-50 px-4 py-8">
+    <div className="min-h-screen flex items-center justify-center bg-[#F0FBFA] px-4 py-8">
       <div className="max-w-md w-full">
-        <div className="bg-white rounded-3xl shadow-xl p-6 sm:p-8 border border-gray-100">
-          <div className="text-center mb-6">
-            <h1 className="text-3xl sm:text-4xl font-black text-orange-600 mb-1.5 flex items-center justify-center gap-2">
-              <span>🍽️</span>
-              <span>CampusEats</span>
+        <div className="bg-white rounded-3xl shadow-xl p-6 sm:p-8 border border-[#D5EAE7]">
+          {/* Logo Treatment (Refinement: Lucide Utensils + Clean Typography) */}
+          <div className="flex flex-col items-center justify-center text-center mb-6">
+            <div className="w-12 h-12 rounded-2xl bg-[#E6F7F5] border border-[#D5EAE7] flex items-center justify-center text-[#0D9488] shadow-2xs mb-3">
+              <Utensils className="w-6 h-6" />
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-black text-[#0D9488] tracking-tight">
+              Campus Eats
             </h1>
-            <p className="text-gray-600 text-sm">Rate & discover the best food on campus</p>
+            <p className="text-[#728783] text-xs sm:text-sm mt-1">
+              Rate & discover the best food across Bennett University
+            </p>
           </div>
 
           {/* Mode Switcher Tabs */}
           {mode !== 'forgot_password' && (
-            <div className="flex border border-gray-200 rounded-xl p-1 mb-6 bg-gray-50">
+            <div className="flex border border-[#D5EAE7] rounded-xl p-1 mb-6 bg-[#E6F7F5]/50">
               <button
                 type="button"
                 onClick={() => switchMode('login')}
                 className={`flex-1 min-h-[44px] py-2.5 text-sm font-bold rounded-lg transition active:scale-95 ${
                   mode === 'login'
-                    ? 'bg-white text-orange-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'bg-white text-[#0D9488] shadow-xs'
+                    : 'text-[#728783] hover:text-[#1F2937]'
                 }`}
               >
                 Login
@@ -176,8 +182,8 @@ export default function LoginPage() {
                 onClick={() => switchMode('signup')}
                 className={`flex-1 min-h-[44px] py-2.5 text-sm font-bold rounded-lg transition active:scale-95 ${
                   mode === 'signup'
-                    ? 'bg-white text-orange-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'bg-white text-[#0D9488] shadow-xs'
+                    : 'text-[#728783] hover:text-[#1F2937]'
                 }`}
               >
                 Create Account
@@ -187,22 +193,22 @@ export default function LoginPage() {
 
           {mode === 'forgot_password' && (
             <div className="mb-6">
-              <h2 className="text-xl font-bold text-gray-900">Forgot Password</h2>
-              <p className="text-gray-600 text-sm mt-1">
+              <h2 className="text-xl font-bold text-[#1F2937]">Forgot Password</h2>
+              <p className="text-[#728783] text-sm mt-1">
                 Enter your Bennett University email to receive a password reset link.
               </p>
             </div>
           )}
 
           {mode === 'signup' && (
-            <div className="bg-orange-50 border border-orange-200 text-orange-900 text-xs rounded-xl p-3 mb-4 leading-relaxed">
-              <strong>Note:</strong> Create a separate Campus Eats password. Do not use your existing Bennett University portal password.
+            <div className="bg-[#E6F7F5] border border-[#D5EAE7] text-[#0D9488] text-xs rounded-xl p-3 mb-4 leading-relaxed font-medium">
+              <strong className="font-bold">Note:</strong> Create a separate Campus Eats password. Do not use your existing Bennett University portal password.
             </div>
           )}
 
           <form onSubmit={handleAuth} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1.5">
+              <label htmlFor="email" className="block text-sm font-semibold text-[#1F2937] mb-1.5">
                 Bennett University Email
               </label>
               <input
@@ -212,21 +218,21 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your.email@bennett.edu.in"
                 required
-                className="w-full px-4 py-3.5 bg-gray-50 border border-gray-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition text-base text-gray-900 placeholder:text-gray-400 focus:text-gray-900"
+                className="w-full px-4 py-3.5 bg-[#F8FDFA] border border-[#D5EAE7] rounded-xl focus:bg-white focus:ring-2 focus:ring-[#0D9488] focus:border-transparent outline-none transition text-base text-[#1F2937] placeholder:text-[#728783]/60 focus:text-[#1F2937]"
               />
             </div>
 
             {mode !== 'forgot_password' && (
               <div>
                 <div className="flex justify-between items-center mb-1.5">
-                  <label htmlFor="password" className="block text-sm font-semibold text-gray-700">
+                  <label htmlFor="password" className="block text-sm font-semibold text-[#1F2937]">
                     Password
                   </label>
                   {mode === 'login' && (
                     <button
                       type="button"
                       onClick={() => switchMode('forgot_password')}
-                      className="min-h-[36px] flex items-center text-xs text-orange-600 hover:text-orange-700 font-semibold"
+                      className="min-h-[36px] flex items-center text-xs text-[#0D9488] hover:text-[#0F766E] font-semibold transition"
                     >
                       Forgot Password?
                     </button>
@@ -241,15 +247,15 @@ export default function LoginPage() {
                     placeholder={mode === 'signup' ? 'Create a password (min. 6 characters)' : 'Enter your password'}
                     required
                     minLength={6}
-                    className="w-full px-4 py-3.5 pr-12 bg-gray-50 border border-gray-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition text-base text-gray-900 placeholder:text-gray-400 focus:text-gray-900"
+                    className="w-full px-4 py-3.5 pr-12 bg-[#F8FDFA] border border-[#D5EAE7] rounded-xl focus:bg-white focus:ring-2 focus:ring-[#0D9488] focus:border-transparent outline-none transition text-base text-[#1F2937] placeholder:text-[#728783]/60 focus:text-[#1F2937]"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 w-11 h-full flex items-center justify-center text-gray-400 hover:text-gray-600 text-lg transition"
+                    className="absolute inset-y-0 right-0 w-11 h-full flex items-center justify-center text-[#728783] hover:text-[#0D9488] focus:outline-none focus:ring-2 focus:ring-[#0D9488] rounded-xl transition"
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
-                    {showPassword ? '🙈' : '👁️'}
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
               </div>
@@ -257,7 +263,7 @@ export default function LoginPage() {
 
             {mode === 'signup' && (
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-1.5">
+                <label htmlFor="confirmPassword" className="block text-sm font-semibold text-[#1F2937] mb-1.5">
                   Confirm Password
                 </label>
                 <div className="relative">
@@ -269,15 +275,15 @@ export default function LoginPage() {
                     placeholder="Confirm your password"
                     required
                     minLength={6}
-                    className="w-full px-4 py-3.5 pr-12 bg-gray-50 border border-gray-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition text-base text-gray-900 placeholder:text-gray-400 focus:text-gray-900"
+                    className="w-full px-4 py-3.5 pr-12 bg-[#F8FDFA] border border-[#D5EAE7] rounded-xl focus:bg-white focus:ring-2 focus:ring-[#0D9488] focus:border-transparent outline-none transition text-base text-[#1F2937] placeholder:text-[#728783]/60 focus:text-[#1F2937]"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute inset-y-0 right-0 w-11 h-full flex items-center justify-center text-gray-400 hover:text-gray-600 text-lg transition"
+                    className="absolute inset-y-0 right-0 w-11 h-full flex items-center justify-center text-[#728783] hover:text-[#0D9488] focus:outline-none focus:ring-2 focus:ring-[#0D9488] rounded-xl transition"
                     aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
                   >
-                    {showConfirmPassword ? '🙈' : '👁️'}
+                    {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
               </div>
@@ -290,7 +296,7 @@ export default function LoginPage() {
             )}
 
             {message && (
-              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm">
+              <div className="bg-[#E6F7F5] border border-[#0D9488]/30 text-[#0D9488] px-4 py-3 rounded-xl text-sm font-medium">
                 {message}
               </div>
             )}
@@ -298,7 +304,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full min-h-[48px] bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 px-4 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed text-base shadow-sm active:scale-98 flex items-center justify-center"
+              className="w-full min-h-[48px] bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold py-3.5 px-4 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed text-base shadow-sm active:scale-98 flex items-center justify-center"
             >
               {loading
                 ? mode === 'signup'
@@ -314,18 +320,18 @@ export default function LoginPage() {
             </button>
 
             {mode === 'signup' && (
-              <p className="text-xs text-gray-500 text-center leading-relaxed mt-3">
+              <p className="text-xs text-[#728783] text-center leading-relaxed mt-3">
                 By creating an account, you acknowledge that you have read and agree to our{' '}
                 <Link
                   href="/terms-and-conditions"
-                  className="text-orange-600 hover:text-orange-700 underline font-semibold transition"
+                  className="text-[#0D9488] hover:text-[#0F766E] underline font-semibold transition"
                 >
                   Terms & Conditions
                 </Link>{' '}
                 and{' '}
                 <Link
                   href="/privacy-policy"
-                  className="text-orange-600 hover:text-orange-700 underline font-semibold transition"
+                  className="text-[#0D9488] hover:text-[#0F766E] underline font-semibold transition"
                 >
                   Privacy Policy
                 </Link>.
@@ -338,29 +344,29 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => switchMode('login')}
-                className="min-h-[44px] px-4 inline-flex items-center text-sm text-orange-600 hover:text-orange-700 font-semibold"
+                className="min-h-[44px] px-4 inline-flex items-center text-sm text-[#0D9488] hover:text-[#0F766E] font-semibold transition gap-1.5"
               >
-                ← Back to Login
+                <ArrowLeft className="w-4 h-4" /> Back to Login
               </button>
             </div>
           ) : (
-            <p className="text-center text-xs text-gray-500 mt-6">
+            <p className="text-center text-xs text-[#728783] mt-6">
               Only @bennett.edu.in emails are allowed
             </p>
           )}
 
           {/* Legal Links (Always accessible and clickable on mobile & desktop) */}
-          <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-center gap-4 text-xs text-gray-500">
+          <div className="mt-6 pt-4 border-t border-[#D5EAE7] flex items-center justify-center gap-4 text-xs text-[#728783]">
             <Link
               href="/terms-and-conditions"
-              className="text-orange-600 hover:text-orange-700 underline font-semibold transition py-1"
+              className="text-[#0D9488] hover:text-[#0F766E] underline font-semibold transition py-1"
             >
               Terms & Conditions
             </Link>
-            <span className="text-gray-300">•</span>
+            <span className="text-[#D5EAE7]">•</span>
             <Link
               href="/privacy-policy"
-              className="text-orange-600 hover:text-orange-700 underline font-semibold transition py-1"
+              className="text-[#0D9488] hover:text-[#0F766E] underline font-semibold transition py-1"
             >
               Privacy Policy
             </Link>

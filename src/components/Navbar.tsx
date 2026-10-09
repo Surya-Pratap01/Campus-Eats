@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
+import { Utensils, MapPin, LayoutDashboard, Home as HomeIcon, Compass, Store, User, LogIn, X } from 'lucide-react'
 
 export default function Navbar() {
   const [userEmail, setUserEmail] = useState<string | null>(null)
@@ -56,33 +57,45 @@ export default function Navbar() {
   return (
     <>
       {/* Top App Bar (Mobile & Desktop) */}
-      <nav className="bg-white/95 backdrop-blur-md shadow-xs border-b border-gray-200/80 sticky top-0 z-40">
+      <header className="bg-[#F0FBFA]/95 backdrop-blur-md shadow-[0_1px_8px_rgba(13,148,136,0.06)] border-b border-[#D5EAE7] sticky top-0 z-40 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-14 sm:h-16">
-            <Link
-              href="/"
-              className="flex items-center space-x-2 py-2 -ml-2 px-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500"
-              aria-label="CampusEats Home"
-            >
-              <span className="text-2xl sm:text-3xl" role="img" aria-label="Campus Eats Logo">🍽️</span>
-              <div className="flex flex-col">
-                <span className="text-lg sm:text-xl font-black tracking-tight text-orange-600 leading-tight">
-                  CampusEats
-                </span>
-                <span className="text-[10px] text-gray-500 font-medium hidden sm:block">
-                  Bennett University
-                </span>
-              </div>
-            </Link>
-
-            {/* Desktop Navigation Links (>= sm) */}
-            <div className="hidden sm:flex items-center space-x-2 sm:space-x-4">
+          <div className="flex justify-between items-center h-16 sm:h-20">
+            {/* Logo and Campus Subtitle (Refinement 1: Clean Lucide icons) */}
+            <div className="flex items-center gap-3 sm:gap-4 shrink-0">
               <Link
                 href="/"
-                className={`px-3 py-2 rounded-lg font-medium text-sm transition min-h-[44px] flex items-center ${
+                className="flex items-center gap-2.5 py-1 -ml-1 px-1 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
+                aria-label="Campus Eats Bennett University"
+              >
+                <div className="w-10 h-10 rounded-xl bg-[#E6F7F5] border border-[#D5EAE7] flex items-center justify-center text-[#0D9488] shadow-2xs">
+                  <Utensils className="w-5 h-5 text-[#0D9488]" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xl sm:text-2xl font-black tracking-tight text-[#0D9488] leading-none">
+                    Campus Eats
+                  </span>
+                  <span className="text-[11px] sm:text-xs text-[#728783] flex items-center gap-1 mt-0.5 font-medium">
+                    <MapPin className="w-3.5 h-3.5 text-[#0D9488] shrink-0" />
+                    <span>Bennett University, Greater Noida</span>
+                  </span>
+                </div>
+              </Link>
+
+              {/* Campus Active indicator (desktop) */}
+              <div className="hidden lg:flex items-center gap-1.5 px-3 py-1 bg-[#E6F7F5] text-[#0D9488] border border-[#D5EAE7] rounded-full text-xs font-semibold">
+                <span className="w-2 h-2 rounded-full bg-[#0D9488] animate-pulse"></span>
+                <span>Campus Dining Active</span>
+              </div>
+            </div>
+
+            {/* Desktop Navigation Links (Refinement 2: Clean Admin link & balanced spacing) */}
+            <nav className="hidden sm:flex items-center space-x-1 md:space-x-2">
+              <Link
+                href="/"
+                className={`px-3.5 py-2 rounded-xl font-semibold text-sm transition min-h-[44px] flex items-center ${
                   isHomeActive
-                    ? 'text-orange-600 bg-orange-50 font-semibold'
-                    : 'text-gray-700 hover:text-orange-600 hover:bg-gray-50'
+                    ? 'text-[#0D9488] bg-[#E6F7F5]'
+                    : 'text-[#728783] hover:text-[#1F2937] hover:bg-[#E6F7F5]/50'
                 }`}
               >
                 Home
@@ -91,36 +104,42 @@ export default function Navbar() {
               <Link
                 href="/explore"
                 prefetch={true}
-                className={`px-3 py-2 rounded-lg font-medium text-sm transition min-h-[44px] flex items-center ${
+                className={`px-3.5 py-2 rounded-xl font-semibold text-sm transition min-h-[44px] flex items-center ${
                   isExploreActive
-                    ? 'text-orange-600 bg-orange-50 font-semibold'
-                    : 'text-gray-700 hover:text-orange-600 hover:bg-gray-50'
+                    ? 'text-[#0D9488] bg-[#E6F7F5]'
+                    : 'text-[#728783] hover:text-[#1F2937] hover:bg-[#E6F7F5]/50'
                 }`}
               >
-                Explore
+                Explore Outlets
               </Link>
 
               {isAdmin && (
                 <Link
                   href="/admin"
-                  className={`px-3 py-2 rounded-lg font-medium text-sm transition min-h-[44px] flex items-center ${
+                  className={`px-3.5 py-2 rounded-xl font-semibold text-sm transition min-h-[44px] flex items-center gap-1.5 ${
                     isAdminActive
-                      ? 'text-orange-600 bg-orange-50 font-semibold'
-                      : 'text-gray-700 hover:text-orange-600 hover:bg-gray-50'
+                      ? 'text-[#0D9488] bg-[#E6F7F5]'
+                      : 'text-[#728783] hover:text-[#1F2937] hover:bg-[#E6F7F5]/50'
                   }`}
                 >
-                  Admin Panel
+                  <LayoutDashboard className="w-4 h-4 text-[#0D9488]" />
+                  <span>Admin Panel</span>
                 </Link>
               )}
-              
+
               {userEmail ? (
-                <div className="flex items-center space-x-3 pl-2 border-l border-gray-200">
-                  <span className="text-gray-600 text-sm max-w-[200px] truncate" title={userEmail}>
-                    {userEmail}
-                  </span>
+                <div className="flex items-center space-x-3 pl-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-[#0D9488] text-white flex items-center justify-center font-bold text-xs shadow-2xs">
+                      {userEmail.charAt(0).toUpperCase()}
+                    </div>
+                    <span className="text-[#1F2937] text-xs font-medium max-w-[150px] truncate hidden md:inline" title={userEmail}>
+                      {userEmail}
+                    </span>
+                  </div>
                   <button
                     onClick={handleLogout}
-                    className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition shadow-xs min-h-[44px] flex items-center"
+                    className="bg-[#E6F7F5] hover:bg-[#D5EAE7] text-[#0D9488] px-3.5 py-2 rounded-xl font-bold text-xs transition min-h-[44px] flex items-center"
                   >
                     Logout
                   </button>
@@ -128,20 +147,20 @@ export default function Navbar() {
               ) : (
                 <Link
                   href="/login"
-                  className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition shadow-xs min-h-[44px] flex items-center"
+                  className="bg-[#0D9488] hover:bg-[#0F766E] text-white px-4 py-2 rounded-xl font-bold text-sm transition shadow-sm min-h-[44px] flex items-center"
                 >
                   Sign In
                 </Link>
               )}
-            </div>
+            </nav>
 
             {/* Mobile Top Right Quick Action (< sm) */}
-            <div className="sm:hidden flex items-center">
+            <div className="sm:hidden flex items-center gap-2">
               {userEmail ? (
                 <button
                   type="button"
                   onClick={() => setIsProfileSheetOpen(true)}
-                  className="w-11 h-11 flex items-center justify-center rounded-full bg-orange-100 text-orange-700 font-bold text-sm border border-orange-200 active:scale-95 transition"
+                  className="w-11 h-11 flex items-center justify-center rounded-full bg-[#E6F7F5] text-[#0D9488] font-bold text-sm border border-[#D5EAE7] active:scale-95 transition"
                   aria-label="Open user profile"
                 >
                   {userEmail.charAt(0).toUpperCase()}
@@ -149,7 +168,7 @@ export default function Navbar() {
               ) : (
                 <Link
                   href="/login"
-                  className="min-h-[44px] px-3.5 flex items-center bg-orange-600 text-white font-semibold text-xs rounded-xl shadow-xs active:scale-95 transition"
+                  className="min-h-[44px] px-4 flex items-center bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold text-xs rounded-xl shadow-xs active:scale-95 transition"
                 >
                   Sign In
                 </Link>
@@ -157,21 +176,21 @@ export default function Navbar() {
             </div>
           </div>
         </div>
-      </nav>
+      </header>
 
       {/* Mobile Fixed Bottom Navigation Bar (< sm) */}
-      <aside aria-label="Mobile Navigation" className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200 pb-safe sm:hidden shadow-lg">
+      <aside aria-label="Mobile Navigation" className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#D5EAE7] pb-safe sm:hidden shadow-[0_-4px_16px_rgba(13,148,136,0.08)]">
         <div className="flex items-stretch justify-around h-16 px-2">
           {/* Home Tab */}
           <Link
             href="/"
             className={`flex-1 flex flex-col items-center justify-center min-h-[48px] py-1 transition-colors ${
               isHomeActive
-                ? 'text-orange-600 font-semibold'
-                : 'text-gray-500 hover:text-gray-900'
+                ? 'text-[#0D9488] font-bold'
+                : 'text-[#728783] hover:text-[#1F2937]'
             }`}
           >
-            <span className="text-xl leading-none mb-1">🏠</span>
+            <HomeIcon className="w-5 h-5 mb-1" />
             <span className="text-[11px] leading-tight">Home</span>
           </Link>
 
@@ -181,26 +200,34 @@ export default function Navbar() {
             prefetch={true}
             className={`flex-1 flex flex-col items-center justify-center min-h-[48px] py-1 transition-colors ${
               isExploreActive
-                ? 'text-orange-600 font-semibold'
-                : 'text-gray-500 hover:text-gray-900'
+                ? 'text-[#0D9488] font-bold'
+                : 'text-[#728783] hover:text-[#1F2937]'
             }`}
           >
-            <span className="text-xl leading-none mb-1">🔍</span>
+            <Compass className="w-5 h-5 mb-1" />
             <span className="text-[11px] leading-tight">Explore</span>
           </Link>
 
-          {/* Admin Tab (If Admin) */}
-          {isAdmin && (
+          {/* Admin Tab (If Admin) or Quick Outlets link */}
+          {isAdmin ? (
             <Link
               href="/admin"
               className={`flex-1 flex flex-col items-center justify-center min-h-[48px] py-1 transition-colors ${
                 isAdminActive
-                  ? 'text-orange-600 font-semibold'
-                  : 'text-gray-500 hover:text-gray-900'
+                  ? 'text-[#0D9488] font-bold'
+                  : 'text-[#728783] hover:text-[#1F2937]'
               }`}
             >
-              <span className="text-xl leading-none mb-1">⚙️</span>
+              <LayoutDashboard className="w-5 h-5 mb-1" />
               <span className="text-[11px] leading-tight">Admin</span>
+            </Link>
+          ) : (
+            <Link
+              href="/#outlets"
+              className="flex-1 flex flex-col items-center justify-center min-h-[48px] py-1 text-[#728783] hover:text-[#1F2937] transition-colors"
+            >
+              <Store className="w-5 h-5 mb-1" />
+              <span className="text-[11px] leading-tight">Outlets</span>
             </Link>
           )}
 
@@ -209,9 +236,9 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setIsProfileSheetOpen(true)}
-              className="flex-1 flex flex-col items-center justify-center min-h-[48px] py-1 text-gray-500 hover:text-gray-900 transition-colors"
+              className="flex-1 flex flex-col items-center justify-center min-h-[48px] py-1 text-[#728783] hover:text-[#1F2937] transition-colors"
             >
-              <span className="text-xl leading-none mb-1">👤</span>
+              <User className="w-5 h-5 mb-1" />
               <span className="text-[11px] leading-tight">Profile</span>
             </button>
           ) : (
@@ -219,11 +246,11 @@ export default function Navbar() {
               href="/login"
               className={`flex-1 flex flex-col items-center justify-center min-h-[48px] py-1 transition-colors ${
                 isLoginActive
-                  ? 'text-orange-600 font-semibold'
-                  : 'text-gray-500 hover:text-gray-900'
+                  ? 'text-[#0D9488] font-bold'
+                  : 'text-[#728783] hover:text-[#1F2937]'
               }`}
             >
-              <span className="text-xl leading-none mb-1">🔑</span>
+              <LogIn className="w-5 h-5 mb-1" />
               <span className="text-[11px] leading-tight">Login</span>
             </Link>
           )}
@@ -241,20 +268,20 @@ export default function Navbar() {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Top drag handle indicator for mobile sheet */}
-            <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-4 sm:hidden" />
+            <div className="w-12 h-1.5 bg-[#D5EAE7] rounded-full mx-auto mb-4 sm:hidden" />
 
-            <div className="flex items-center justify-between pb-4 border-b border-gray-100">
+            <div className="flex items-center justify-between pb-4 border-b border-[#D5EAE7]">
               <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-lg font-bold">
+                <div className="w-12 h-12 rounded-full bg-[#E6F7F5] text-[#0D9488] border border-[#D5EAE7] flex items-center justify-center text-lg font-bold">
                   {userEmail ? userEmail.charAt(0).toUpperCase() : 'U'}
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs text-gray-400 font-medium">Logged in as</p>
-                  <p className="text-sm font-semibold text-gray-800 truncate max-w-[200px]">
+                  <p className="text-xs text-[#728783] font-medium">Logged in as</p>
+                  <p className="text-sm font-semibold text-[#1F2937] truncate max-w-[200px]">
                     {userEmail}
                   </p>
                   {isAdmin && (
-                    <span className="inline-block mt-0.5 text-[10px] font-bold px-2 py-0.5 bg-orange-100 text-orange-700 rounded-full">
+                    <span className="inline-block mt-0.5 text-[10px] font-bold px-2 py-0.5 bg-[#E6F7F5] text-[#0D9488] border border-[#D5EAE7] rounded-full">
                       Admin Access
                     </span>
                   )}
@@ -263,10 +290,10 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => setIsProfileSheetOpen(false)}
-                className="w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-700 text-xl font-bold rounded-full hover:bg-gray-100"
+                className="w-11 h-11 flex items-center justify-center text-[#728783] hover:text-[#1F2937] rounded-full hover:bg-[#E6F7F5]"
                 aria-label="Close profile drawer"
               >
-                ✕
+                <X className="w-5 h-5" />
               </button>
             </div>
 
@@ -275,9 +302,9 @@ export default function Navbar() {
                 <Link
                   href="/admin"
                   onClick={() => setIsProfileSheetOpen(false)}
-                  className="w-full flex items-center justify-center space-x-2 py-3.5 px-4 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold rounded-xl text-sm transition min-h-[48px]"
+                  className="w-full flex items-center justify-center space-x-2 py-3.5 px-4 bg-[#E6F7F5] hover:bg-[#D5EAE7] text-[#0D9488] font-bold rounded-xl text-sm transition min-h-[48px]"
                 >
-                  <span>⚙️</span>
+                  <LayoutDashboard className="w-4 h-4" />
                   <span>Open Admin Panel</span>
                 </Link>
               )}
@@ -285,16 +312,15 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="w-full flex items-center justify-center space-x-2 py-3.5 px-4 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl text-sm transition shadow-sm min-h-[48px]"
+                className="w-full flex items-center justify-center space-x-2 py-3.5 px-4 bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold rounded-xl text-sm transition shadow-sm min-h-[48px]"
               >
-                <span>🚪</span>
                 <span>Sign Out</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setIsProfileSheetOpen(false)}
-                className="w-full py-3 px-4 bg-gray-50 text-gray-600 font-medium rounded-xl text-sm transition hover:bg-gray-100 min-h-[44px]"
+                className="w-full py-3 px-4 bg-[#F0FBFA] text-[#728783] font-medium rounded-xl text-sm transition hover:bg-[#E6F7F5] min-h-[44px]"
               >
                 Close
               </button>
